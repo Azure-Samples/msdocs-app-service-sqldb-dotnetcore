@@ -21,7 +21,20 @@ namespace DotNetCoreSqlDb.Controllers
         // GET: Todos
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Todo.ToListAsync());
+            var todos = new List<Todo>();
+
+            // This allows the home page to load if migrations have not been run yet.
+            try
+            {
+                todos = await _context.Todo.ToListAsync();
+            }
+            catch (Exception e)
+            {
+
+                return View(todos);
+            }
+
+            return View(todos);
         }
 
         // GET: Todos/Details/5
