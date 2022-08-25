@@ -3,7 +3,7 @@ on:
     branches:
       - main
     paths:
-      - './deploy/*'
+      - '../deploy/*'
 
   workflow_dispatch:
 
@@ -27,7 +27,7 @@ jobs:
       with:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
         resourceGroupName: ${{ secrets.AZURE_RG }}
-        template: ./deploy/sqlDatabase.bicep
+        template: ../deploy/sqlDatabase.bicep
         failOnStdErr: false
 
             # Deploy Bicep file
@@ -36,5 +36,5 @@ jobs:
       with:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
         resourceGroupName: ${{ secrets.AZURE_RG }}
-        template: ./deploy/sqlDatabase.bicep
+        template: ../deploy/appService.bicep
         failOnStdErr: false
