@@ -1,0 +1,37 @@
+on: 
+  push:
+    branches:
+      - main
+    paths:
+      - './deploy/*'
+name: dotnet application compoents for Azure
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+
+      # Checkout code
+    - uses: actions/checkout@main
+
+      # Log into Azure
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # Deploy Bicep file
+    - name: deploy SQL Server components
+      uses: azure/arm-deploy@v1
+      with:
+        subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+        resourceGroupName: ${{ secrets.AZURE_RG }}
+        template: ./deploy/sqlDatabase.bicep
+        failOnStdErr: false
+
+            # Deploy Bicep file
+    - name: deploy App Service components
+      uses: azure/arm-deploy@v1
+      with:
+        subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+        resourceGroupName: ${{ secrets.AZURE_RG }}
+        template: ./deploy/sqlDatabase.bicep
+        failOnStdErr: false
