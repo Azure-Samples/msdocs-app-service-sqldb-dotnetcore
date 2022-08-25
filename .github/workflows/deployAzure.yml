@@ -4,6 +4,9 @@ on:
       - main
     paths:
       - './deploy/*'
+
+  workflow_dispatch:
+
 name: dotnet application compoents for Azure
 jobs:
   build-and-deploy:
