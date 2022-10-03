@@ -1,0 +1,5 @@
+{
+  "appService.preDeployTask": "publish-release",
+  "appService.deploySubpath": "DotNetCoreSqlDb/bin/Release/net6.0/publish",
+  "appService.defaultWebAppToDeploy": "/subscriptions/e76ddd51-21d2-458f-9c10-d6f1da37509f/AppServices/subscriptions/e76ddd51-21d2-458f-9c10-d6f1da37509f/resourceGroups/msdocs-core-sql/providers/Microsoft.Web/sites/coresqlkims"
+}
