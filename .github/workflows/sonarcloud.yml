@@ -1,6 +1,6 @@
 name: Sonarcloud analysis
 env:
-  sonarcloud_project_name: 'fouquetm_msdocs-app-service-sqldb-dotnetcore'
+  sonarcloud_project_name: 'msdocs-app-service-sqldb-dotnetcore'
   sonarcloud_organization: 'karlduponchel'
 on:
   workflow_dispatch:
