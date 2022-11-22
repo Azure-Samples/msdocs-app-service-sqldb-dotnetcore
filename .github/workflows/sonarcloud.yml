@@ -20,4 +20,4 @@ jobs:
       with:
         args: >
           -Dsonar.organization=${{ env.sonarcloud_organization }}
-          -Dsonar.projectKey= ${{ env.sonarcloud_project_name }}
+          -Dsonar.projectKey=${{ env.sonarcloud_project_name }}
