@@ -14,5 +14,12 @@ namespace DotNetCoreSqlDb.Models
         }
 
         public DbSet<DotNetCoreSqlDb.Models.Todo> Todo { get; set; }
-    }
+        
+        /*protected override void onModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Todo>().ToTable("Todo");
+        }*/
+     
+    }   
 }
+
