@@ -22,9 +22,6 @@ jobs:
           dotnet-version: '6.0.x'
           include-prerelease: true
 
-      - name: restore nuget packages
-        run: dotnet restore
-
       - name: Build with dotnet
         run: dotnet build --configuration Release
 
