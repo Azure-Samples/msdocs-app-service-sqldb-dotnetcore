@@ -1,13 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json;
 
-namespace DotNetCoreSqlDb
+namespace DotNetCoreSqlDb.Data
 {
     public static class ConvertData<T>
     {
         public static List<T> ByteArrayToObjectList(byte[] inputByteArray)
         {
             var deserializedList = JsonSerializer.Deserialize<List<T>>(inputByteArray);
+            if(deserializedList == null) 
+            {
+                throw new Exception();
+            }
             return deserializedList;
         }
 
@@ -21,6 +25,10 @@ namespace DotNetCoreSqlDb
         public static T ByteArrayToObject(byte[] inputByteArray)
         {
             var deserializedList = JsonSerializer.Deserialize<T>(inputByteArray);
+            if (deserializedList == null)
+            {
+                throw new Exception();
+            }
             return deserializedList;
         }
 
