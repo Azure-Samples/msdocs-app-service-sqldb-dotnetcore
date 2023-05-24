@@ -5,33 +5,42 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using DotNetCoreSqlDb;
+using DotNetCoreSqlDb.Data;
 using DotNetCoreSqlDb.Models;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace DotNetCoreSqlDb.Controllers
 {
+    [ActionTimerFilter]
     public class TodosController : Controller
     {
         private readonly MyDatabaseContext _context;
+        private readonly IDistributedCache _cache;
+        private readonly string _TodoItemsCacheKey = "TodoItemsList";
 
-        public TodosController(MyDatabaseContext context)
+        public TodosController(MyDatabaseContext context, IDistributedCache cache)
         {
             _context = context;
+            _cache = cache;
         }
 
         // GET: Todos
         public async Task<IActionResult> Index()
         {
             var todos = new List<Todo>();
+            byte[]? TodoListByteArray;
 
-            // This allows the home page to load if migrations have not been run yet.
-            try
+            TodoListByteArray = await _cache.GetAsync(_TodoItemsCacheKey);
+            if (TodoListByteArray != null && TodoListByteArray.Length > 0)
+            { 
+                todos = ConvertData<Todo>.ByteArrayToObjectList(TodoListByteArray);
+            }
+            else 
             {
                 todos = await _context.Todo.ToListAsync();
-            }
-            catch (Exception e)
-            {
-
-                return View(todos);
+                TodoListByteArray = ConvertData<Todo>.ObjectListToByteArray(todos);
+                await _cache.SetAsync(_TodoItemsCacheKey, TodoListByteArray);
             }
 
             return View(todos);
@@ -40,17 +49,34 @@ namespace DotNetCoreSqlDb.Controllers
         // GET: Todos/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            byte[]? todoItemByteArray;
+            Todo? todo;
+
             if (id == null)
             {
                 return NotFound();
             }
 
-            var todo = await _context.Todo
+            todoItemByteArray = await _cache.GetAsync(GetTodoItemCacheKey(id));
+
+            if (todoItemByteArray != null && todoItemByteArray.Length > 0)
+            {
+                todo = ConvertData<Todo>.ByteArrayToObject(todoItemByteArray);
+            }
+            else 
+            {
+                todo = await _context.Todo
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (todo == null)
             {
                 return NotFound();
             }
+
+                todoItemByteArray = ConvertData<Todo>.ObjectToByteArray(todo);
+                await _cache.SetAsync(GetTodoItemCacheKey(id), todoItemByteArray);
+            }
+
+            
 
             return View(todo);
         }
@@ -62,8 +88,8 @@ namespace DotNetCoreSqlDb.Controllers
         }
 
         // POST: Todos/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ID,Description,CreatedDate")] Todo todo)
@@ -72,6 +98,7 @@ namespace DotNetCoreSqlDb.Controllers
             {
                 _context.Add(todo);
                 await _context.SaveChangesAsync();
+                await _cache.RemoveAsync(_TodoItemsCacheKey);
                 return RedirectToAction(nameof(Index));
             }
             return View(todo);
@@ -94,8 +121,8 @@ namespace DotNetCoreSqlDb.Controllers
         }
 
         // POST: Todos/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ID,Description,CreatedDate")] Todo todo)
@@ -111,6 +138,8 @@ namespace DotNetCoreSqlDb.Controllers
                 {
                     _context.Update(todo);
                     await _context.SaveChangesAsync();
+                    await _cache.RemoveAsync(GetTodoItemCacheKey(todo.ID));
+                    await _cache.RemoveAsync(_TodoItemsCacheKey);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -152,8 +181,13 @@ namespace DotNetCoreSqlDb.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var todo = await _context.Todo.FindAsync(id);
-            _context.Todo.Remove(todo);
-            await _context.SaveChangesAsync();
+            if (todo != null)
+            {
+                _context.Todo.Remove(todo);
+                await _context.SaveChangesAsync();
+                await _cache.RemoveAsync(GetTodoItemCacheKey(todo.ID));
+                await _cache.RemoveAsync(_TodoItemsCacheKey);
+            }
             return RedirectToAction(nameof(Index));
         }
 
@@ -161,5 +195,12 @@ namespace DotNetCoreSqlDb.Controllers
         {
             return _context.Todo.Any(e => e.ID == id);
         }
+
+        private string GetTodoItemCacheKey(int? id)
+        {
+            return _TodoItemsCacheKey+"_&_"+id;
+        }
     }
+
+    
 }
