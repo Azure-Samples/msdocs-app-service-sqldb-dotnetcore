@@ -12,6 +12,7 @@ namespace DotNetCoreSqlDb.Data
         public MyDatabaseContext (DbContextOptions<MyDatabaseContext> options)
             : base(options)
         {
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         }
 
         public DbSet<DotNetCoreSqlDb.Models.Todo> Todo { get; set; } = default!;
