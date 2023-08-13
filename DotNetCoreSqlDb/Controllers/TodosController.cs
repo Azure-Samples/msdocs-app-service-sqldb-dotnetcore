@@ -15,11 +15,11 @@ namespace DotNetCoreSqlDb.Controllers
     [ActionTimerFilter]
     public class TodosController : Controller
     {
-        private readonly MyDatabaseContext _context;
+        private readonly TodoDb _context;
         private readonly IDistributedCache _cache;
         private readonly string _TodoItemsCacheKey = "TodoItemsList";
 
-        public TodosController(MyDatabaseContext context, IDistributedCache cache)
+        public TodosController(TodoDb context, IDistributedCache cache)
         {
             _context = context;
             _cache = cache;
