@@ -6,6 +6,7 @@ namespace DotNetCoreSqlDb.Models
     {
         public int id { get; set; }
         public string Simbol { get; set; }
+        public double Price { get; set; }
         public int Volume { get; set; }
         public string Period { get; set; }
         public string Signal { get; set; }
