@@ -16,6 +16,7 @@ namespace DotNetCoreSqlDb.Controllers
     public class TodosController : Controller
     {
         private readonly TodoDb _context;
+        private readonly IDistributedCache _cache;
 
         public TodosController(TodoDb context)
         {
@@ -162,8 +163,5 @@ namespace DotNetCoreSqlDb.Controllers
         {
             return _context.Todo.Any(e => e.ID == id);
         }
-
     }
-
-
 }
