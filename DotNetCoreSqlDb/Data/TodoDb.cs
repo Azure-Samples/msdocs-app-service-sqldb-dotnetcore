@@ -7,13 +7,13 @@ using DotNetCoreSqlDb.Models;
 
 namespace DotNetCoreSqlDb.Data
 {
-    public class MyDatabaseContext : DbContext
+    public class TodoDb : DbContext
     {
-        public MyDatabaseContext (DbContextOptions<MyDatabaseContext> options)
+        public TodoDb (DbContextOptions<TodoDb> options)
             : base(options)
         {
         }
 
-        public DbSet<DotNetCoreSqlDb.Models.Todo> Todo { get; set; } = default!;
+        public DbSet<Todo> Todo { get; set; } = default!;
     }
 }
