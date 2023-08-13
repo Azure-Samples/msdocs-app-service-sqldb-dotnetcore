@@ -1,7 +1,8 @@
-﻿@model IEnumerable<DotNetCoreSqlDb.Models.EMASignal>
+﻿@model IEnumerable<DotNetCoreSqlDb.Models.TVSignal>
 
 @{
     ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h1>Index</h1>
@@ -16,19 +17,19 @@
                 @Html.DisplayNameFor(model => model.Simbol)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.OptionDate)
+                @Html.DisplayNameFor(model => model.Volume)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Length)
+                @Html.DisplayNameFor(model => model.Period)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Signal)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.SignalDatetime)
+                @Html.DisplayNameFor(model => model.Source)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CreatedAt)
+                @Html.DisplayNameFor(model => model.SignalDatetime)
             </th>
             <th></th>
         </tr>
@@ -40,19 +41,19 @@
                 @Html.DisplayFor(modelItem => item.Simbol)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.OptionDate)
+                @Html.DisplayFor(modelItem => item.Volume)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Length)
+                @Html.DisplayFor(modelItem => item.Period)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Signal)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.SignalDatetime)
+                @Html.DisplayFor(modelItem => item.Source)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CreatedAt)
+                @Html.DisplayFor(modelItem => item.SignalDatetime)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |

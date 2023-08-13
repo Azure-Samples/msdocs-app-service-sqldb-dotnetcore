@@ -12,55 +12,55 @@ namespace DotNetCoreSqlDb.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class EMASignalController : ControllerBase
+    public class TVSignalController : ControllerBase
     {
         private readonly CoreDbContext _context;
 
-        public EMASignalController(CoreDbContext context)
+        public TVSignalController(CoreDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/EMASignals
+        // GET: api/TVSignals
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<EMASignal>>> GetEMASignal()
+        public async Task<ActionResult<IEnumerable<TVSignal>>> GetTVSignal()
         {
-          if (_context.EMASignal == null)
+          if (_context.TVSignal == null)
           {
               return NotFound();
           }
-            return await _context.EMASignal.ToListAsync();
+            return await _context.TVSignal.ToListAsync();
         }
 
-        // GET: api/EMASignals/5
+        // GET: api/TVSignals/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<EMASignal>> GetEMASignal(int id)
+        public async Task<ActionResult<TVSignal>> GetTVSignal(int id)
         {
-          if (_context.EMASignal == null)
+          if (_context.TVSignal == null)
           {
               return NotFound();
           }
-            var eMASignal = await _context.EMASignal.FindAsync(id);
+            var tVSignal = await _context.TVSignal.FindAsync(id);
 
-            if (eMASignal == null)
+            if (tVSignal == null)
             {
                 return NotFound();
             }
 
-            return eMASignal;
+            return tVSignal;
         }
 
-        // PUT: api/EMASignals/5
+        // PUT: api/TVSignals/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutEMASignal(int id, EMASignal eMASignal)
+        public async Task<IActionResult> PutTVSignal(int id, TVSignal tVSignal)
         {
-            if (id != eMASignal.id)
+            if (id != tVSignal.id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(eMASignal).State = EntityState.Modified;
+            _context.Entry(tVSignal).State = EntityState.Modified;
 
             try
             {
@@ -68,7 +68,7 @@ namespace DotNetCoreSqlDb.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!EMASignalExists(id))
+                if (!TVSignalExists(id))
                 {
                     return NotFound();
                 }
@@ -81,44 +81,44 @@ namespace DotNetCoreSqlDb.Controllers
             return NoContent();
         }
 
-        // POST: api/EMASignals
+        // POST: api/TVSignals
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<EMASignal>> PostEMASignal(EMASignal eMASignal)
+        public async Task<ActionResult<TVSignal>> PostTVSignal(TVSignal tVSignal)
         {
-          if (_context.EMASignal == null)
+          if (_context.TVSignal == null)
           {
-              return Problem("Entity set 'CoreDbContext.EMASignal'  is null.");
+              return Problem("Entity set 'CoreDbContext.TVSignal'  is null.");
           }
-            _context.EMASignal.Add(eMASignal);
+            _context.TVSignal.Add(tVSignal);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetEMASignal", new { id = eMASignal.id }, eMASignal);
+            return CreatedAtAction("GetTVSignal", new { id = tVSignal.id }, tVSignal);
         }
 
-        // DELETE: api/EMASignals/5
+        // DELETE: api/TVSignals/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteEMASignal(int id)
+        public async Task<IActionResult> DeleteTVSignal(int id)
         {
-            if (_context.EMASignal == null)
+            if (_context.TVSignal == null)
             {
                 return NotFound();
             }
-            var eMASignal = await _context.EMASignal.FindAsync(id);
-            if (eMASignal == null)
+            var tVSignal = await _context.TVSignal.FindAsync(id);
+            if (tVSignal == null)
             {
                 return NotFound();
             }
 
-            _context.EMASignal.Remove(eMASignal);
+            _context.TVSignal.Remove(tVSignal);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool EMASignalExists(int id)
+        private bool TVSignalExists(int id)
         {
-            return (_context.EMASignal?.Any(e => e.id == id)).GetValueOrDefault();
+            return (_context.TVSignal?.Any(e => e.id == id)).GetValueOrDefault();
         }
     }
 }

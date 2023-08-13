@@ -12,8 +12,8 @@ namespace DotNetCoreSqlDb.Data
         public CoreDbContext (DbContextOptions<CoreDbContext> options)
             : base(options)
         {
-        }       
+        }        
 
-        public DbSet<DotNetCoreSqlDb.Models.EMASignal> EMASignal { get; set; } = default!;
+        public DbSet<DotNetCoreSqlDb.Models.TVSignal> TVSignal { get; set; } = default!;
     }
 }

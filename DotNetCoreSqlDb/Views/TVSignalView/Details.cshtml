@@ -1,13 +1,14 @@
-﻿@model DotNetCoreSqlDb.Models.EMASignal
+﻿@model DotNetCoreSqlDb.Models.TVSignal
 
 @{
     ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h1>Details</h1>
 
 <div>
-    <h4>EMASignal</h4>
+    <h4>TVSignal</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -17,16 +18,16 @@
             @Html.DisplayFor(model => model.Simbol)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.OptionDate)
+            @Html.DisplayNameFor(model => model.Volume)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.OptionDate)
+            @Html.DisplayFor(model => model.Volume)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Length)
+            @Html.DisplayNameFor(model => model.Period)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Length)
+            @Html.DisplayFor(model => model.Period)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Signal)
@@ -35,16 +36,16 @@
             @Html.DisplayFor(model => model.Signal)
         </dd>
         <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Source)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Source)
+        </dd>
+        <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.SignalDatetime)
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.SignalDatetime)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedAt)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedAt)
         </dd>
     </dl>
 </div>
