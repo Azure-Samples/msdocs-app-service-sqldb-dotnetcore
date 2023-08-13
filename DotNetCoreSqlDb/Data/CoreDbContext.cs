@@ -7,13 +7,13 @@ using DotNetCoreSqlDb.Models;
 
 namespace DotNetCoreSqlDb.Data
 {
-    public class TodoDb : DbContext
+    public class CoreDbContext : DbContext
     {
-        public TodoDb (DbContextOptions<TodoDb> options)
+        public CoreDbContext (DbContextOptions<CoreDbContext> options)
             : base(options)
         {
-        }
+        }       
 
-        public DbSet<Todo> Todo { get; set; } = default!;
+        public DbSet<DotNetCoreSqlDb.Models.EMASignal> EMASignal { get; set; } = default!;
     }
 }
