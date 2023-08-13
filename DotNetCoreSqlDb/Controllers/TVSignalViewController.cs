@@ -56,7 +56,7 @@ namespace DotNetCoreSqlDb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,Simbol,Volume,Period,Signal,Source,SignalDatetime")] TVSignal tVSignal)
+        public async Task<IActionResult> Create([Bind("id,Simbol,Price,Volume,Period,Signal,Source,SignalDatetime")] TVSignal tVSignal)
         {
             if (ModelState.IsValid)
             {
@@ -88,7 +88,7 @@ namespace DotNetCoreSqlDb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,Simbol,Volume,Period,Signal,Source,SignalDatetime")] TVSignal tVSignal)
+        public async Task<IActionResult> Edit(int id, [Bind("id,Simbol,Price,Volume,Period,Signal,Source,SignalDatetime")] TVSignal tVSignal)
         {
             if (id != tVSignal.id)
             {

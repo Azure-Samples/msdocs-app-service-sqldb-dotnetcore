@@ -21,7 +21,7 @@ namespace DotNetCoreSqlDb.Controllers
             _context = context;
         }
 
-        // GET: api/TVSignals
+        // GET: api/TVSignal
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TVSignal>>> GetTVSignal()
         {
@@ -32,7 +32,7 @@ namespace DotNetCoreSqlDb.Controllers
             return await _context.TVSignal.ToListAsync();
         }
 
-        // GET: api/TVSignals/5
+        // GET: api/TVSignal/5
         [HttpGet("{id}")]
         public async Task<ActionResult<TVSignal>> GetTVSignal(int id)
         {
@@ -50,7 +50,7 @@ namespace DotNetCoreSqlDb.Controllers
             return tVSignal;
         }
 
-        // PUT: api/TVSignals/5
+        // PUT: api/TVSignal/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTVSignal(int id, TVSignal tVSignal)
@@ -81,7 +81,7 @@ namespace DotNetCoreSqlDb.Controllers
             return NoContent();
         }
 
-        // POST: api/TVSignals
+        // POST: api/TVSignal
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<TVSignal>> PostTVSignal(TVSignal tVSignal)
@@ -96,7 +96,7 @@ namespace DotNetCoreSqlDb.Controllers
             return CreatedAtAction("GetTVSignal", new { id = tVSignal.id }, tVSignal);
         }
 
-        // DELETE: api/TVSignals/5
+        // DELETE: api/TVSignal/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTVSignal(int id)
         {
