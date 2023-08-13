@@ -6,7 +6,7 @@ using DotNetCoreSqlDb.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add database context and cache
-builder.Services.AddDbContext<TodoDb>(options =>
+builder.Services.AddDbContext<CoreDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MyDbConnection")));
 builder.Services.AddStackExchangeRedisCache(options =>
 {
@@ -19,32 +19,15 @@ builder.Services.AddControllersWithViews();
 
 // Add App Service logging
 builder.Logging.AddAzureWebAppDiagnostics();
+builder.Services.AddSwaggerGen();
 var app = builder.Build();
-
-app.MapGet("/todoitems", async (TodoDb db) =>
-    await db.Todo.ToListAsync());
-
-
-
-app.MapGet("/todoitems/{id}", async (int id, TodoDb db) =>
-    await db.Todo.FindAsync(id)
-        is Todo todo
-            ? Results.Ok(todo)
-            : Results.NotFound());
-app.MapPost("/todoitems", async (Todo todo, TodoDb db) =>
-{
-    db.Todo.Add(todo);
-    await db.SaveChangesAsync();
-
-    return Results.Created($"/todoitems/{todo.ID}", todo);
-});
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
+    app.UseSwagger();
+    app.UseSwaggerUI();
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    // app.UseHsts();
 }
 
 app.UseHttpsRedirection();
@@ -56,6 +39,17 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Todos}/{action=Index}/{id?}");
+    pattern: "{controller=EMASignalMvc}/{action=Index}/{id?}");
+
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+    options.RoutePrefix = string.Empty;
+});
+
+app.UseSwagger(options =>
+{
+    options.SerializeAsV2 = true;
+});
 
 app.Run();
