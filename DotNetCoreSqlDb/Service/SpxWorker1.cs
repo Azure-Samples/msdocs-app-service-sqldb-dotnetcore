@@ -26,7 +26,7 @@ public sealed class SpxWorker1 : BackgroundService
             int delay = 2000;
             var users = _context.User.ToList();
 
-            TimeSpan time = DateTime.Now.TimeOfDay;
+            TimeSpan time = DateTime.Now.ToLocalTime().TimeOfDay;
             if (users != null && time > new TimeSpan(9, 30, 25) && time < new TimeSpan(15, 59, 40))
             {
                 int intMinutes = (int)time.TotalMinutes % 15;
@@ -35,17 +35,17 @@ public sealed class SpxWorker1 : BackgroundService
                 delay = 10000;
               
 
-                _logger.LogInformation($"Running INSIDE the window at: {DateTimeOffset.Now}");
+                _logger.LogInformation($"Running INSIDE the window at: {DateTimeOffset.Now.ToLocalTime()}");
             }
             else if (users != null)
             {
                
-                DateTimeOffset now = (DateTimeOffset)DateTime.Now;
+                DateTimeOffset now = (DateTimeOffset)DateTime.Now.ToLocalTime();
                 var heathCheckResponse = eTrade.HealthCheck(users.First(), "SPY", now);
                 _logger.LogInformation($"Running OUTSIDE the window: {heathCheckResponse}");
             }
 
-            //_logger.LogInformation($"{this.GetType()} running at: {DateTimeOffset.Now}");
+            //_logger.LogInformation($"{this.GetType()} running at: {DateTimeOffset.Now.ToLocalTime()}");
             await Task.Delay(delay, stoppingToken);
         }
     }

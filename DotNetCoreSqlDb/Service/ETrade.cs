@@ -52,7 +52,6 @@ public class ETrade
         }
         return options.First();    }
 
-
     public void OpenOrder(CoreDbContext context, Option option, int singalId)
     {
 
@@ -67,7 +66,7 @@ public class ETrade
             openSinalId = singalId,
             openStokePrice = option.Price,
             openCost = option.Ask,
-            openDateTime = DateTime.Now,
+            openDateTime = DateTime.Now.ToLocalTime(),
             closeBatchDateTime = option.BatchDateTime
         };
 
@@ -79,7 +78,7 @@ public class ETrade
     {
         orderBookDemo.closeBatch = option.Batch;
         orderBookDemo.closeBatchDateTime = option.BatchDateTime;
-        orderBookDemo.closeDateTime = DateTime.Now;
+        orderBookDemo.closeDateTime = DateTime.Now.ToLocalTime();
         orderBookDemo.closeSinalId = singalId;
         orderBookDemo.closeStokePrice = option.Price;
         orderBookDemo.closeCost = option.Bid;
@@ -88,8 +87,6 @@ public class ETrade
         context.Update(orderBookDemo);
         context.SaveChanges();
     }
-
-
 
     public List<Option> BuildOptionBase(long timeStamp, string batchDateTime, double price, string optionJson)
     {
@@ -149,7 +146,7 @@ public class ETrade
             var response = client.Execute(quoteRequest);
 
             if (response.Content.Contains("oauth_problem"))
-                Console.WriteLine($"====*****=====oauth_problem: {DateTimeOffset.Now}");
+                Console.WriteLine($"====*****=====oauth_problem: {DateTimeOffset.Now.ToLocalTime()}");
 
             var stockJson = JObject.Parse(response.Content).First.First;
             var price = Convert.ToDouble(stockJson["QuoteData"][0]["All"]["ask"]);

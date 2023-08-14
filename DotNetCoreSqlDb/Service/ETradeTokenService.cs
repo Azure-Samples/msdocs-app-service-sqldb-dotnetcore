@@ -64,7 +64,7 @@ namespace DotNetCoreSqlDb.Service
             userLocal.Verifier = verifier; 
             userLocal.AccessToken = accessToken;
             userLocal.AccessTokenSecret = accessTokenSecret;
-            userLocal.TokenCreatedDate = DateTime.Now;
+            userLocal.TokenCreatedDate = DateTime.Now.ToLocalTime();
 
             context.User.Update(userLocal);
             context.SaveChanges();
@@ -76,12 +76,12 @@ namespace DotNetCoreSqlDb.Service
 
             if (response.Content.Contains("token_expired"))
             {
-                Console.WriteLine($"{userLocal.UserName}: Token Expired - {DateTimeOffset.Now}");
+                Console.WriteLine($"{userLocal.UserName}: Token Expired - {DateTimeOffset.Now.ToLocalTime()}");
                
             }
             else
             {
-                Console.WriteLine($" {userLocal.UserName}: Token Created and Tested Successfully - {DateTimeOffset.Now}");
+                Console.WriteLine($" {userLocal.UserName}: Token Created and Tested Successfully - {DateTimeOffset.Now.ToLocalTime()}");
             }
 
             return userLocal;
