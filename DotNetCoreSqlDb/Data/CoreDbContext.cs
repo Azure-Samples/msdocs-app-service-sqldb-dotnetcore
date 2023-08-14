@@ -27,7 +27,15 @@ namespace DotNetCoreSqlDb.Data
         #endregion
 
         #region Required
-        public DbSet<DotNetCoreSqlDb.Models.OrderBookDemo> OrderBookDemo { get; set; } = default!;
+        //public DbSet<DotNetCoreSqlDb.Models.OrderBookDemo> OrderBookDemo { get; set; } = default!;
+        #endregion
+
+        #region Required
+        public DbSet<DotNetCoreSqlDb.Models.OrderBookOptionSelling> OrderBookOptionSelling { get; set; } = default!;
+        #endregion
+
+        #region Required
+        public DbSet<DotNetCoreSqlDb.Models.OrderBookOptionBuying> OrderBookOptionBuying { get; set; } = default!;
         #endregion
     }
 }

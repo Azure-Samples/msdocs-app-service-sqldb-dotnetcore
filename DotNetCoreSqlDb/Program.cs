@@ -18,10 +18,10 @@ builder.Services.AddStackExchangeRedisCache(options =>
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-//var optionsBuilder = new DbContextOptionsBuilder<CoreDbContext>();
-//optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("MyDbConnection"));
+var optionsBuilder = new DbContextOptionsBuilder<CoreDbContext>();
+optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("MyDbConnection"));
 
-//IServiceCollection serviceCollection = builder.Services.AddSingleton<IHostedService>(serviceProvider => new SpxWorker1(serviceProvider.GetService<ILogger<SpxWorker1>>(), new CoreDbContext(optionsBuilder.Options)));
+IServiceCollection serviceCollection = builder.Services.AddSingleton<IHostedService>(serviceProvider => new HealtherService(new CoreDbContext(optionsBuilder.Options)));
 
 
 // Add App Service logging
