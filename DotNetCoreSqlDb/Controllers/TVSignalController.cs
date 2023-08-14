@@ -99,7 +99,7 @@ namespace DotNetCoreSqlDb.Controllers
 
             if (tVSignal.Simbol == "SPX")
             {
-                if (tVSignal.Period.Contains("3") || tVSignal.Period.Contains("3M") )
+                if (tVSignal.Period.Contains("1"))
                 {
                     var hoursLeft = 16 - DateTime.Now.Hour;
                     double awayFactor = (hoursLeft / 3) * 10;
