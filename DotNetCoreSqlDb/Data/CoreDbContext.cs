@@ -4,16 +4,35 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using DotNetCoreSqlDb.Models;
+using System.Reflection.Metadata;
 
 namespace DotNetCoreSqlDb.Data
 {
     public class CoreDbContext : DbContext
     {
-        public CoreDbContext (DbContextOptions<CoreDbContext> options)
+        public CoreDbContext(DbContextOptions<CoreDbContext> options)
             : base(options)
         {
-        }        
+        }
 
-        public DbSet<DotNetCoreSqlDb.Models.TVSignal> TVSignal { get; set; } = default!;
+        public DbSet<User> User { get; set; }
+        public DbSet<Account> Account { get; set; }
+
+        public DbSet<TVSignal> TVSignal { get; set; } = default!;
+
+        public DbSet<OptionBase> Option { get; set; }
+
+        #region Required
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<User>()
+                .Property(b => b.UserEmail)
+                .IsRequired();
+        }
+        #endregion
+
+        #region Required
+        public DbSet<DotNetCoreSqlDb.Models.OrderBookDemo> OrderBookDemo { get; set; } = default!;
+        #endregion
     }
 }
