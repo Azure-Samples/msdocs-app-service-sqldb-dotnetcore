@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using DotNetCoreSqlDb.Data;
 using DotNetCoreSqlDb.Models;
+using DotNetCoreSqlDb.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,12 @@ builder.Services.AddStackExchangeRedisCache(options =>
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+//var optionsBuilder = new DbContextOptionsBuilder<CoreDbContext>();
+//optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("MyDbConnection"));
+
+//IServiceCollection serviceCollection = builder.Services.AddSingleton<IHostedService>(serviceProvider => new SpxWorker1(serviceProvider.GetService<ILogger<SpxWorker1>>(), new CoreDbContext(optionsBuilder.Options)));
+
 
 // Add App Service logging
 builder.Logging.AddAzureWebAppDiagnostics();
@@ -53,3 +60,5 @@ app.UseSwagger(options =>
 });
 
 app.Run();
+
+

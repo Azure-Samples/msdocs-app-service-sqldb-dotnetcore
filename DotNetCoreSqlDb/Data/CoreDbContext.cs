@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using DotNetCoreSqlDb.Models;
-using System.Reflection.Metadata;
 
 namespace DotNetCoreSqlDb.Data
 {
@@ -13,7 +8,7 @@ namespace DotNetCoreSqlDb.Data
         public CoreDbContext(DbContextOptions<CoreDbContext> options)
             : base(options)
         {
-        }
+        }       
 
         public DbSet<User> User { get; set; }
         public DbSet<Account> Account { get; set; }

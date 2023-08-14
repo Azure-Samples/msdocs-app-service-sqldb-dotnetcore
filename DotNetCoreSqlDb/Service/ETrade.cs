@@ -149,16 +149,13 @@ public class ETrade
             var response = client.Execute(quoteRequest);
 
             if (response.Content.Contains("oauth_problem"))
-                Console.WriteLine($"=========oauth_problem: {DateTimeOffset.Now}");
-
+                Console.WriteLine($"====*****=====oauth_problem: {DateTimeOffset.Now}");
 
             var stockJson = JObject.Parse(response.Content).First.First;
             var price = Convert.ToDouble(stockJson["QuoteData"][0]["All"]["ask"]);
             price = price <= 0 ? Convert.ToDouble(stockJson["QuoteData"][0]["All"]["lastTrade"]) : price;
 
             return price.ToString() + " : " + now.ToString();
-
-
         }
         catch (Exception ex)
         {
