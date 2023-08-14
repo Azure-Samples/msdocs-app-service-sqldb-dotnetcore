@@ -22,7 +22,7 @@ public class ETrade
 
     public Option GetOptionDetails(CoreDbContext context, User user, string optionDate, string symbol, double price, double strikePriceNear, string chainType, long batchId, string batchDateTime)
     {
-        DateTime optionDateLocal = DateTime.Parse(optionDate, new CultureInfo("en-US", true));       
+        DateTime optionDateLocal = DateTime.Parse(optionDate, new CultureInfo("en-US", true));
 
         int expiryYear = optionDateLocal.Year;
         int expiryMonth = optionDateLocal.Month;
@@ -36,13 +36,15 @@ public class ETrade
             string etradeBaseUrl = user.EtradeBaseUrl;
             var client = new RestClient(etradeBaseUrl);
 
+            symbol = symbol.Equals("SPXW") ? "SPX" : symbol;
+
             var quoteRequest = new RestRequest($"v1/market/optionchains?symbol={symbol}&expiryYear={expiryYear}&expiryMonth={expiryMonth}&expiryDay={expiryDay}&includeWeekly={false}&chainType={chainType}&strikePriceNear={strikePriceNear}&noOfStrikes={noOfStrikes}");
             client.Authenticator = OAuth1Authenticator.ForProtectedResource(user.ConsumerKey, user.ConsumerSecret, user.AccessToken, user.AccessTokenSecret);
             var response = client.Execute(quoteRequest);
 
             optionJson = JObject.Parse(response.Content);
             options = BuildOptionBase(batchId, batchDateTime, price, optionJson.ToString());
-           
+
             context.Option.AddRange(options);
             context.SaveChanges();
         }
@@ -50,12 +52,12 @@ public class ETrade
         {
             Console.WriteLine(ex.Message);
         }
-        return options.First();    }
+        return options.First();
+    }
 
-    public void OpenOrder(CoreDbContext context, Option option, int singalId)
+    public void OpenOrderOptionBuying(CoreDbContext context, Option option, int singalId)
     {
-
-        var orderBookDemo = new OrderBookDemo
+        var orderBookOptionBuying = new OrderBookOptionBuying
         {
             symbol = option.Symbol,
             optionType = option.OptionType,
@@ -66,25 +68,60 @@ public class ETrade
             openSinalId = singalId,
             openStokePrice = option.Price,
             openCost = option.Ask,
-            openDateTime = DateTime.Now.ToLocalTime(),
+            openDateTime = Help.GetEstDatetime(),
             closeBatchDateTime = option.BatchDateTime
         };
 
-        context.Add(orderBookDemo);
+        context.Add(orderBookOptionBuying);
         context.SaveChanges();
     }
 
-    public void CloseOrder(CoreDbContext context, OrderBookDemo orderBookDemo, Option option, int singalId)
+    public void CloseOrderOptionBuying(CoreDbContext context, OrderBookOptionBuying orderBookOptionBuying, Option option, int singalId)
     {
-        orderBookDemo.closeBatch = option.Batch;
-        orderBookDemo.closeBatchDateTime = option.BatchDateTime;
-        orderBookDemo.closeDateTime = DateTime.Now.ToLocalTime();
-        orderBookDemo.closeSinalId = singalId;
-        orderBookDemo.closeStokePrice = option.Price;
-        orderBookDemo.closeCost = option.Bid;
-        orderBookDemo.PnL = orderBookDemo.closeCost - orderBookDemo.openCost;       
+        orderBookOptionBuying.closeBatch = option.Batch;
+        orderBookOptionBuying.closeBatchDateTime = option.BatchDateTime;
+        orderBookOptionBuying.closeDateTime = Help.GetEstDatetime();
+        orderBookOptionBuying.closeSinalId = singalId;
+        orderBookOptionBuying.closeStokePrice = option.Price;
+        orderBookOptionBuying.closeCost = option.Bid;
+        orderBookOptionBuying.PnL = Math.Round(orderBookOptionBuying.closeCost - orderBookOptionBuying.openCost, 2);
 
-        context.Update(orderBookDemo);
+        context.Update(orderBookOptionBuying);
+        context.SaveChanges();
+    }
+
+    public void OpenOrderOptionSelling(CoreDbContext context, Option option, int singalId)
+    {
+        var orderBookOptionSelling = new OrderBookOptionSelling
+        {
+            symbol = option.Symbol,
+            optionType = option.OptionType,
+            optionDate = option.OptionDate,
+            strikePrice = option.StrikePrice,
+            openBatch = option.Batch,
+            openBatchDateTime = option.BatchDateTime,
+            openSinalId = singalId,
+            openStokePrice = option.Price,
+            openCost = option.Bid,
+            openDateTime = Help.GetEstDatetime(),
+            closeBatchDateTime = option.BatchDateTime
+        };
+
+        context.Add(orderBookOptionSelling);
+        context.SaveChanges();
+    }
+
+    public void CloseOrderOptionSelling(CoreDbContext context, OrderBookOptionSelling orderBookOptionSelling, Option option, int singalId)
+    {
+        orderBookOptionSelling.closeBatch = option.Batch;
+        orderBookOptionSelling.closeBatchDateTime = option.BatchDateTime;
+        orderBookOptionSelling.closeDateTime = Help.GetEstDatetime();
+        orderBookOptionSelling.closeSinalId = singalId;
+        orderBookOptionSelling.closeStokePrice = option.Price;
+        orderBookOptionSelling.closeCost = option.Ask;
+        orderBookOptionSelling.PnL = Math.Round(orderBookOptionSelling.openCost - orderBookOptionSelling.closeCost, 2);
+
+        context.Update(orderBookOptionSelling);
         context.SaveChanges();
     }
 
@@ -114,12 +151,12 @@ public class ETrade
         foreach (var item in calls)
         {
             item.Symbol = item.OptionRootSymbol;
-           item.Rho = item.Rho;
+            item.Rho = item.Rho;
             item.Vega = item.Vega;
-             item.Theta = item.Theta;
-           item.Delta = item.Delta;
-             item.Gamma = item.Gamma;
-             item.Iv = item.Iv;
+            item.Theta = item.Theta;
+            item.Delta = item.Delta;
+            item.Gamma = item.Gamma;
+            item.Iv = item.Iv;
 
 
             item.CurrentValue = item.CurrentValue;
@@ -137,7 +174,7 @@ public class ETrade
         List<Option> options = new List<Option>();
         JObject optionJson = new JObject();
         try
-        {            
+        {
             string etradeBaseUrl = user.EtradeBaseUrl;
             var client = new RestClient(etradeBaseUrl);
 
@@ -145,18 +182,20 @@ public class ETrade
             client.Authenticator = OAuth1Authenticator.ForProtectedResource(user.ConsumerKey, user.ConsumerSecret, user.AccessToken, user.AccessTokenSecret);
             var response = client.Execute(quoteRequest);
 
-            if (response.Content.Contains("oauth_problem"))
-                Console.WriteLine($"====*****=====oauth_problem: {DateTimeOffset.Now.ToLocalTime()}");
+            if (response.Content != null && response.Content.Contains("oauth_problem"))
+                new Exception($"|****** OAUTH PROBLEM ******|");
 
-            var stockJson = JObject.Parse(response.Content).First.First;
-            var price = Convert.ToDouble(stockJson["QuoteData"][0]["All"]["ask"]);
-            price = price <= 0 ? Convert.ToDouble(stockJson["QuoteData"][0]["All"]["lastTrade"]) : price;
+            var stockQuote = JsonConvert.DeserializeObject<StockQuoteResponse>(response.Content.ToString());
 
-            return price.ToString() + " : " + now.ToString();
+            var price = 0.0;
+            if (stockQuote != null && stockQuote.QuoteResponse.QuoteData.Count > 0)
+                price = stockQuote.QuoteResponse.QuoteData[0].All.ask;
+
+            return $"{symbol} : {price}";
         }
         catch (Exception ex)
         {
-            return "Error:" + ex.Message;            
+            return "Error:" + ex.Message;
         }
     }
 }

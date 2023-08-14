@@ -1,6 +1,6 @@
 ﻿namespace DotNetCoreSqlDb.Models
 {
-    public class OrderBookDemo
+    public class OrderBookOptionBuying
     {
         public int id { get; set; }
         public string symbol { get; set; }

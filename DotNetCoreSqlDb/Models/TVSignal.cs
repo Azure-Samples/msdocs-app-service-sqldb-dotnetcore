@@ -1,4 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.InteropServices;
+using System.Runtime.Serialization;
 
 namespace DotNetCoreSqlDb.Models
 {
@@ -14,6 +17,6 @@ namespace DotNetCoreSqlDb.Models
         public DateTime SignalDatetime { get; set; }
 
         [NotMapped]
-        public DateTime CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }        
     }
 }
