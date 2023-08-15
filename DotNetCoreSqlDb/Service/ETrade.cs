@@ -169,12 +169,15 @@ public class ETrade
 
     }
 
-    public string HealthCheck(User user, string symbol, DateTimeOffset now)
+    public string HealthCheck(CoreDbContext context, string symbol, DateTimeOffset now)
     {
         List<Option> options = new List<Option>();
         JObject optionJson = new JObject();
         try
         {
+            var users = context.User.ToList();
+            var user = users.FirstOrDefault();
+
             string etradeBaseUrl = user.EtradeBaseUrl;
             var client = new RestClient(etradeBaseUrl);
 

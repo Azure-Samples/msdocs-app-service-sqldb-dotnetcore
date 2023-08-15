@@ -1,0 +1,130 @@
+﻿@model IEnumerable<DotNetCoreSqlDb.Models.OrderBookOptionBuying>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.symbol)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.optionType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.optionDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.strikePrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.openDateTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.openBatch)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.openBatchDateTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.openSinalId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.openStokePrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.openCost)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.closeDateTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.closeBatch)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.closeBatchDateTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.closeSinalId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.closeStokePrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.closeCost)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PnL)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.symbol)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.optionType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.optionDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.strikePrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.openDateTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.openBatch)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.openBatchDateTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.openSinalId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.openStokePrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.openCost)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.closeDateTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.closeBatch)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.closeBatchDateTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.closeSinalId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.closeStokePrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.closeCost)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PnL)
+            </td>
+            <td>                
+                <a asp-action="Details" asp-route-id="@item.id">Details</a> 
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
