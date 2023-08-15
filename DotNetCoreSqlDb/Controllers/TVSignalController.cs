@@ -93,6 +93,8 @@ namespace DotNetCoreSqlDb.Controllers
             {
                 return Problem("Entity set 'CoreDbContext.TVSignal'  is null.");
             }
+
+            tVSignal.CreatedAt = Help.GetEstDatetime();
             _context.TVSignal.Add(tVSignal);
             await _context.SaveChangesAsync();            
 
@@ -123,7 +125,7 @@ namespace DotNetCoreSqlDb.Controllers
                 ETrade etrade = new ETrade();
             var users = _context.User.ToList();
 
-            if (tVSignal.Signal.ToUpper().Equals("LONG"))
+            if (tVSignal.Signal.ToUpper().Equals("LONG")  && (tVSignal.Period.Equals(emaPeriodFactor) || tVSignal.Source.Equals("HLINE")))
             {
                 string closeOptionType = "PUT";
                 string optionType = "CALL";
@@ -145,7 +147,7 @@ namespace DotNetCoreSqlDb.Controllers
                     }
                 }
             }
-            else if (tVSignal.Signal.ToUpper().Equals("SHORT"))
+            else if (tVSignal.Signal.ToUpper().Equals("SHORT") && (tVSignal.Period.Equals(emaPeriodFactor) || tVSignal.Source.Equals("HLINE")))
             {
                 string closeOptionType = "CALL";
                 string optionType = "PUT";
@@ -180,7 +182,7 @@ namespace DotNetCoreSqlDb.Controllers
             ETrade etrade = new ETrade();
             var users = _context.User.ToList();
 
-            if (tVSignal.Signal.ToUpper().Equals("LONG"))
+            if (tVSignal.Signal.ToUpper().Equals("LONG") && (tVSignal.Period.Equals(emaPeriodFactor) || tVSignal.Source.Equals("HLINE"))))
             {
                 string closeOptionType = "CALL";
                 string optionType = "PUT";
@@ -204,7 +206,7 @@ namespace DotNetCoreSqlDb.Controllers
                 }
             }
 
-            if (tVSignal.Signal.ToUpper().Equals("SHORT"))
+            if (tVSignal.Signal.ToUpper().Equals("SHORT") && (tVSignal.Period.Equals(emaPeriodFactor) || tVSignal.Source.Equals("HLINE")))
             {
                 string closeOptionType = "PUT";
                 string optionType = "CALL";
