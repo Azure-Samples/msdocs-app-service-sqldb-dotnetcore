@@ -22,14 +22,14 @@ public sealed class HealtherService : BackgroundService
             try
             {
                 int delay = 1000 * 60 * 5;
-                var users = _context.User.ToList();
+            var users = _context.User.ToList();
 
-                DateTimeOffset now = (DateTimeOffset)Help.GetEstDatetime();
-                var heathCheckResponse = eTrade.HealthCheck(users.First(), "SPY", now);
-                Console.WriteLine($"Heathcheck: {heathCheckResponse}");
+            DateTimeOffset now = (DateTimeOffset)Help.GetEstDatetime();
+            var heathCheckResponse = eTrade.HealthCheck(users.First(), "SPY", now);
+            Console.WriteLine($"Heathcheck: {heathCheckResponse}");
 
-                await Task.Delay(delay, stoppingToken);
-            }
+            await Task.Delay(delay, stoppingToken);
+        }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
