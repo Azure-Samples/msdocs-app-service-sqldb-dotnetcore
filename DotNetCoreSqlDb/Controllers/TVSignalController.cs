@@ -182,7 +182,7 @@ namespace DotNetCoreSqlDb.Controllers
             ETrade etrade = new ETrade();
             var users = _context.User.ToList();
 
-            if (tVSignal.Signal.ToUpper().Equals("LONG") && (tVSignal.Period.Equals(emaPeriodFactor) || tVSignal.Source.Equals("HLINE"))))
+            if (tVSignal.Signal.ToUpper().Equals("LONG") && (tVSignal.Period.Equals(emaPeriodFactor) || tVSignal.Source.Equals("HLINE")))
             {
                 string closeOptionType = "CALL";
                 string optionType = "PUT";
