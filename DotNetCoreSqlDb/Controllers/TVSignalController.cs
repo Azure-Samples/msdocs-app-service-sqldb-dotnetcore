@@ -102,7 +102,7 @@ namespace DotNetCoreSqlDb.Controllers
             {                
                 var optionDate = Help.GetEstDatetime().ToShortDateString();
                 var hoursLeft = 16 - Help.GetEstDatetime().Hour;              
-                string emaPeriodFactor = "1";
+                string emaPeriodFactor = "3";
 
                 if (tVSignal.Signal.ToUpper().Equals("LONG") || tVSignal.Signal.ToUpper().Equals("SHORT"))
                 {
