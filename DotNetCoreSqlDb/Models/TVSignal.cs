@@ -15,8 +15,6 @@ namespace DotNetCoreSqlDb.Models
         public string Signal { get; set; }
         public string Source { get; set; }
         public DateTime SignalDatetime { get; set; }
-
-        [NotMapped]
         public DateTime CreatedAt { get; set; }        
     }
 }

@@ -95,6 +95,7 @@ namespace DotNetCoreSqlDb.Controllers
             }
 
             tVSignal.CreatedAt = Help.GetEstDatetime();
+            tVSignal.SignalDatetime =  Help.GetEstDatetime(tVSignal.SignalDatetime);
             _context.TVSignal.Add(tVSignal);
             await _context.SaveChangesAsync();            
 
@@ -102,7 +103,7 @@ namespace DotNetCoreSqlDb.Controllers
             {                
                 var optionDate = Help.GetEstDatetime().ToShortDateString();
                 var hoursLeft = 16 - Help.GetEstDatetime().Hour;              
-                string emaPeriodFactor = "1";
+                string emaPeriodFactor = "3";
 
                 if (tVSignal.Signal.ToUpper().Equals("LONG") || tVSignal.Signal.ToUpper().Equals("SHORT"))
                 {

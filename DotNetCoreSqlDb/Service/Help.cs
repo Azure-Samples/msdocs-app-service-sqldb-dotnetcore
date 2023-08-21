@@ -9,7 +9,14 @@ namespace DotNetCoreSqlDb.Service
             var easternZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
 
             return TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, easternZone);
-        }  
-        
+        }
+
+        public static DateTime GetEstDatetime(DateTime dateTime)
+        {
+            var easternZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
+
+            return TimeZoneInfo.ConvertTimeFromUtc(dateTime, easternZone);
+        }
+
     }
 }
