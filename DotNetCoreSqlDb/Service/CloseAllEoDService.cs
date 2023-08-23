@@ -26,26 +26,8 @@ public sealed class CloseAllEoDService : BackgroundService
 
                 if (time > new TimeSpan(15, 58, 30) && time < new TimeSpan(15, 59, 55))
                 {
-                    var users = _context.User.ToList();
-                    DateTimeOffset now = (DateTimeOffset)Help.GetEstDatetime();
-                    var batchId = now.ToUnixTimeSeconds();
-                    var batchDateTime = now.ToString("yyyy-MM-dd hh:mm:ss.fff tt");
-
-                    var callOrderBookOptionBuying = _context.OrderBookOptionBuying.ToList().Where(a => a.closeBatch <= 0).ToList();
-                    foreach (var order in callOrderBookOptionBuying)
-                    {
-                        var option = eTrade.GetOptionDetails(_context, users.First(), order.optionDate, order.symbol, order.strikePrice, order.strikePrice, order.optionType, batchId, batchDateTime);
-                        eTrade.CloseOrderOptionBuying(_context, order, option, order.id);
-                    }
-
-                    var callOrderBookOptionSelling = _context.OrderBookOptionSelling.ToList().Where(a => a.closeBatch <= 0).ToList();
-                    foreach (var order in callOrderBookOptionSelling)
-                    {
-                        var option = eTrade.GetOptionDetails(_context, users.First(), order.optionDate, order.symbol, order.strikePrice, order.strikePrice, order.optionType, batchId, batchDateTime);
-                        eTrade.CloseOrderOptionSelling(_context, order, option, order.id);
-                    }
-
-                    Console.WriteLine($"All Orders Closed");
+                    eTrade.CloseAll(_context);
+                    Console.WriteLine($"Closing All Orders by EoD Service");
                 }
 
                 if (time > new TimeSpan(15, 50, 00) && time < new TimeSpan(15, 59, 59))
@@ -66,4 +48,6 @@ public sealed class CloseAllEoDService : BackgroundService
             }
         }
     }
+
+    
 }

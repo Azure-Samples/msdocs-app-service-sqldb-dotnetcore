@@ -1,0 +1,46 @@
+{
+  "OptionChainResponse": {
+    "timeStamp": 1692388502,
+    "quoteType": "REALTIME",
+    "nearPrice": 4374,
+    "OptionPair": [
+      {
+        "Call": {
+          "optionCategory": "STANDARD",
+          "optionRootSymbol": "SPX",
+          "timeStamp": 1692244860,
+          "adjustedFlag": false,
+          "displaySymbol": "SPX Aug 18 '23 $4375 Call",
+          "optionType": "CALL",
+          "strikePrice": 4375,
+          "symbol": "SPX",
+          "bid": 0,
+          "ask": 0,
+          "bidSize": 0,
+          "askSize": 0,
+          "inTheMoney": "n",
+          "volume": 0,
+          "openInterest": 5053,
+          "netChange": 0,
+          "lastPrice": 7.4,
+          "quoteDetail": "https://api.etrade.com/v1/market/quote/SPX:2023:8:18:CALL:4375.000000",
+          "osiKey": "SPX---230818C04375000",
+          "OptionGreeks": {
+            "rho": 0,
+            "vega": 0,
+            "theta": 0,
+            "delta": 0,
+            "gamma": 0,
+            "iv": 1.65073,
+            "currentValue": true
+          }
+        }
+      }
+    ],
+    "SelectedED": {
+      "month": 8,
+      "year": 2023,
+      "day": 18
+    }
+  }
+}
