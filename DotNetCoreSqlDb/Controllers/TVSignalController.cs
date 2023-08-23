@@ -93,12 +93,6 @@ namespace DotNetCoreSqlDb.Controllers
             {
                 return Problem("Entity set 'CoreDbContext.TVSignal'  is null.");
             }
-            
-            TimeSpan time = Help.GetEstDatetime().TimeOfDay;           
-
-            
-               
-           
 
             tVSignal.CreatedAt = Help.GetEstDatetime();
             tVSignal.SignalDatetime = Help.GetEstDatetime(tVSignal.SignalDatetime);
@@ -112,18 +106,21 @@ namespace DotNetCoreSqlDb.Controllers
                 string emaPeriodFactor = "3";
 
                 ETrade eTrade = new ETrade();
-
-                if (tVSignal.Source.Equals("HLINE") && tVSignal.Signal.ToUpper().Equals("CLOSEALL"))
+               
+               if (tVSignal.Signal.ToUpper().Equals("LONG") || tVSignal.Signal.ToUpper().Equals("SHORT"))
                 {
-                    eTrade.CloseAll(_context);
+                    eTrade.RunOrderBookOptionBuying(_context, tVSignal, optionDate, hoursLeft, emaPeriodFactor);
+                    eTrade.RunOrderBookOptionSelling(_context, tVSignal, optionDate, hoursLeft, emaPeriodFactor);
                 }
-                if (time > new TimeSpan(09, 35, 00) && time < new TimeSpan(15, 55, 00))
+                else if (tVSignal.Source.Equals("HLINE") && tVSignal.Signal.ToUpper().Equals("CLOSEALL"))
                 {
-                    if (tVSignal.Signal.ToUpper().Equals("LONG") || tVSignal.Signal.ToUpper().Equals("SHORT"))
-                    {
-                        eTrade.RunOrderBookOptionBuying(_context, tVSignal, optionDate, hoursLeft, emaPeriodFactor);
-                        eTrade.RunOrderBookOptionSelling(_context, tVSignal, optionDate, hoursLeft, emaPeriodFactor);
-                    }
+                    tVSignal.Signal = "LONG";
+                    eTrade.CloseAllBuyingOrders(_context, tVSignal, optionDate, hoursLeft, emaPeriodFactor);
+                    eTrade.CloseAllSellingOrders(_context, tVSignal, optionDate, hoursLeft, emaPeriodFactor);
+                    tVSignal.Signal = "SHORT";
+                    eTrade.CloseAllBuyingOrders(_context, tVSignal, optionDate, hoursLeft, emaPeriodFactor);
+                    eTrade.CloseAllSellingOrders(_context, tVSignal, optionDate, hoursLeft, emaPeriodFactor);
+
                 }
             }
             return CreatedAtAction("GetTVSignal", new { id = tVSignal.id }, tVSignal);
