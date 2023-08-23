@@ -224,12 +224,16 @@ public class ETrade
                 var option = etrade.GetOptionDetails(_context, users[0], optionDate, tVSignal.Simbol, tVSignal.Price, order.strikePrice, order.optionType, batchId, batchDateTime);
                 etrade.CloseOrderOptionBuying(_context, order, option, tVSignal.id);
             }
-            double strikePriceNear = Math.Round(tVSignal.Price + awayFactor);
-            var callOrderBook = _context.OrderBookOptionBuying.ToList().Where(a => a.symbol.Contains(tVSignal.Simbol) && Convert.ToDateTime(a.optionDate) == Convert.ToDateTime(optionDate) && a.optionType == optionType && a.closeBatch <= 0).ToList();
-            if (callOrderBook.Count <= 0)
+            TimeSpan time = Help.GetEstDatetime().TimeOfDay;
+            if (time > new TimeSpan(09, 35, 00) && time < new TimeSpan(15, 55, 00))
             {
-                var option = etrade.GetOptionDetails(_context, users[0], optionDate, tVSignal.Simbol, tVSignal.Price, Convert.ToInt64(strikePriceNear), optionType, batchId, batchDateTime);
-                etrade.OpenOrderOptionBuying(_context, option, tVSignal.id);
+                double strikePriceNear = Math.Round(tVSignal.Price + awayFactor);
+                var callOrderBook = _context.OrderBookOptionBuying.ToList().Where(a => a.symbol.Contains(tVSignal.Simbol) && Convert.ToDateTime(a.optionDate) == Convert.ToDateTime(optionDate) && a.optionType == optionType && a.closeBatch <= 0).ToList();
+                if (callOrderBook.Count <= 0)
+                {
+                    var option = etrade.GetOptionDetails(_context, users[0], optionDate, tVSignal.Simbol, tVSignal.Price, Convert.ToInt64(strikePriceNear), optionType, batchId, batchDateTime);
+                    etrade.OpenOrderOptionBuying(_context, option, tVSignal.id);
+                }
             }
         }
         else if (tVSignal.Signal.ToUpper().Equals("SHORT") && tVSignal.Period.Equals(emaPeriodFactor))
@@ -243,12 +247,16 @@ public class ETrade
                 var option = etrade.GetOptionDetails(_context, users[0], optionDate, tVSignal.Simbol, tVSignal.Price, order.strikePrice, order.optionType, batchId, batchDateTime);
                 etrade.CloseOrderOptionBuying(_context, order, option, tVSignal.id);
             }
-            double strikePriceNear = Math.Round(tVSignal.Price - awayFactor);
-            var putOrderBook = _context.OrderBookOptionBuying.ToList().Where(a => a.symbol.Contains(tVSignal.Simbol) && Convert.ToDateTime(a.optionDate) == Convert.ToDateTime(optionDate) && a.optionType == optionType && a.closeBatch <= 0).ToList();
-            if (putOrderBook.Count <= 0)
+            TimeSpan time = Help.GetEstDatetime().TimeOfDay;
+            if (time > new TimeSpan(09, 35, 00) && time < new TimeSpan(15, 55, 00))
             {
-                var option = etrade.GetOptionDetails(_context, users[0], optionDate, tVSignal.Simbol, tVSignal.Price, Convert.ToInt64(strikePriceNear), optionType, batchId, batchDateTime);
-                etrade.OpenOrderOptionBuying(_context, option, tVSignal.id);
+                double strikePriceNear = Math.Round(tVSignal.Price - awayFactor);
+                var putOrderBook = _context.OrderBookOptionBuying.ToList().Where(a => a.symbol.Contains(tVSignal.Simbol) && Convert.ToDateTime(a.optionDate) == Convert.ToDateTime(optionDate) && a.optionType == optionType && a.closeBatch <= 0).ToList();
+                if (putOrderBook.Count <= 0)
+                {
+                    var option = etrade.GetOptionDetails(_context, users[0], optionDate, tVSignal.Simbol, tVSignal.Price, Convert.ToInt64(strikePriceNear), optionType, batchId, batchDateTime);
+                    etrade.OpenOrderOptionBuying(_context, option, tVSignal.id);
+                }
             }
         }
     }
@@ -275,13 +283,16 @@ public class ETrade
                 var option = etrade.GetOptionDetails(_context, users[0], optionDate, tVSignal.Simbol, tVSignal.Price, order.strikePrice, order.optionType, batchId, batchDateTime);
                 etrade.CloseOrderOptionSelling(_context, order, option, tVSignal.id);
             }
-
-            double strikePriceNear = Math.Round(tVSignal.Price - awayFactor);
-            var putOrderBook = _context.OrderBookOptionSelling.ToList().Where(a => a.symbol.Contains(tVSignal.Simbol) && Convert.ToDateTime(a.optionDate) == Convert.ToDateTime(optionDate) && a.optionType == optionType && a.closeBatch <= 0).ToList();
-            if (putOrderBook.Count <= 0)
+            TimeSpan time = Help.GetEstDatetime().TimeOfDay;
+            if (time > new TimeSpan(09, 35, 00) && time < new TimeSpan(15, 55, 00))
             {
-                var option = etrade.GetOptionDetails(_context, users[0], optionDate, tVSignal.Simbol, tVSignal.Price, Convert.ToInt64(strikePriceNear), optionType, batchId, batchDateTime);
-                etrade.OpenOrderOptionSelling(_context, option, tVSignal.id);
+                double strikePriceNear = Math.Round(tVSignal.Price - awayFactor);
+                var putOrderBook = _context.OrderBookOptionSelling.ToList().Where(a => a.symbol.Contains(tVSignal.Simbol) && Convert.ToDateTime(a.optionDate) == Convert.ToDateTime(optionDate) && a.optionType == optionType && a.closeBatch <= 0).ToList();
+                if (putOrderBook.Count <= 0)
+                {
+                    var option = etrade.GetOptionDetails(_context, users[0], optionDate, tVSignal.Simbol, tVSignal.Price, Convert.ToInt64(strikePriceNear), optionType, batchId, batchDateTime);
+                    etrade.OpenOrderOptionSelling(_context, option, tVSignal.id);
+                }
             }
         }
 
@@ -296,12 +307,16 @@ public class ETrade
                 var option = etrade.GetOptionDetails(_context, users[0], optionDate, tVSignal.Simbol, tVSignal.Price, order.strikePrice, order.optionType, batchId, batchDateTime);
                 etrade.CloseOrderOptionSelling(_context, order, option, tVSignal.id);
             }
-            double strikePriceNear = Math.Round(tVSignal.Price + awayFactor);
-            var callOrderBook = _context.OrderBookOptionSelling.ToList().Where(a => a.symbol.Contains(tVSignal.Simbol) && Convert.ToDateTime(a.optionDate) == Convert.ToDateTime(optionDate) && a.optionType == optionType && a.closeBatch <= 0).ToList();
-            if (callOrderBook.Count <= 0)
+            TimeSpan time = Help.GetEstDatetime().TimeOfDay;
+            if (time > new TimeSpan(09, 35, 00) && time < new TimeSpan(15, 55, 00))
             {
-                var option = etrade.GetOptionDetails(_context, users[0], optionDate, tVSignal.Simbol, tVSignal.Price, Convert.ToInt64(strikePriceNear), optionType, batchId, batchDateTime);
-                etrade.OpenOrderOptionSelling(_context, option, tVSignal.id);
+                double strikePriceNear = Math.Round(tVSignal.Price + awayFactor);
+                var callOrderBook = _context.OrderBookOptionSelling.ToList().Where(a => a.symbol.Contains(tVSignal.Simbol) && Convert.ToDateTime(a.optionDate) == Convert.ToDateTime(optionDate) && a.optionType == optionType && a.closeBatch <= 0).ToList();
+                if (callOrderBook.Count <= 0)
+                {
+                    var option = etrade.GetOptionDetails(_context, users[0], optionDate, tVSignal.Simbol, tVSignal.Price, Convert.ToInt64(strikePriceNear), optionType, batchId, batchDateTime);
+                    etrade.OpenOrderOptionSelling(_context, option, tVSignal.id);
+                }
             }
         }
     }

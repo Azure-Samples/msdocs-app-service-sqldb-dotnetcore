@@ -93,12 +93,6 @@ namespace DotNetCoreSqlDb.Controllers
             {
                 return Problem("Entity set 'CoreDbContext.TVSignal'  is null.");
             }
-            
-            TimeSpan time = Help.GetEstDatetime().TimeOfDay;           
-
-            
-               
-           
 
             tVSignal.CreatedAt = Help.GetEstDatetime();
             tVSignal.SignalDatetime = Help.GetEstDatetime(tVSignal.SignalDatetime);
@@ -117,13 +111,11 @@ namespace DotNetCoreSqlDb.Controllers
                 {
                     eTrade.CloseAll(_context);
                 }
-                if (time > new TimeSpan(09, 35, 00) && time < new TimeSpan(15, 55, 00))
+
+                if (tVSignal.Signal.ToUpper().Equals("LONG") || tVSignal.Signal.ToUpper().Equals("SHORT"))
                 {
-                    if (tVSignal.Signal.ToUpper().Equals("LONG") || tVSignal.Signal.ToUpper().Equals("SHORT"))
-                    {
-                        eTrade.RunOrderBookOptionBuying(_context, tVSignal, optionDate, hoursLeft, emaPeriodFactor);
-                        eTrade.RunOrderBookOptionSelling(_context, tVSignal, optionDate, hoursLeft, emaPeriodFactor);
-                    }
+                    eTrade.RunOrderBookOptionBuying(_context, tVSignal, optionDate, hoursLeft, emaPeriodFactor);
+                    eTrade.RunOrderBookOptionSelling(_context, tVSignal, optionDate, hoursLeft, emaPeriodFactor);
                 }
             }
             return CreatedAtAction("GetTVSignal", new { id = tVSignal.id }, tVSignal);
