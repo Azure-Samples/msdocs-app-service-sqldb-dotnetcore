@@ -29,7 +29,7 @@ public sealed class CloseAllEoDService : BackgroundService
                     var optionDate = Help.GetEstDatetime().ToShortDateString();
                     eTrade.CloseAll(_context, optionDate);
 
-                    Console.WriteLine($"Closing all orders by EOD job");
+                    Console.WriteLine($"Closing all orders by EOD job - {Help.GetEstDatetime()}");
                 }
 
                 if (time > new TimeSpan(15, 50, 00) && time < new TimeSpan(15, 59, 59))
@@ -39,7 +39,7 @@ public sealed class CloseAllEoDService : BackgroundService
                 else
                 {
                     delay = 1000 * 60 * 5;
-                    Console.WriteLine($"CloseAllEoDService is ON. All orders closes after 03:58:30 PM EST ");
+                    Console.WriteLine($"CloseAllEoDService is ON. All orders closes after 03:58:30 PM EST - {Help.GetEstDatetime()}");
                 }
 
                 await Task.Delay(delay, stoppingToken);

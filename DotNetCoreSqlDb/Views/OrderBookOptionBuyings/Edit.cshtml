@@ -1,0 +1,220 @@
+﻿@model DotNetCoreSqlDb.Models.OrderBookOptionBuying
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Edit</h1>
+
+<h4>OrderBookOptionBuying</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="id" />
+            <div class="form-group">
+                <label asp-for="symbol" class="control-label"></label>
+                <input asp-for="symbol" class="form-control" />
+                <span asp-validation-for="symbol" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="optionType" class="control-label"></label>
+                <input asp-for="optionType" class="form-control" />
+                <span asp-validation-for="optionType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="optionDate" class="control-label"></label>
+                <input asp-for="optionDate" class="form-control" />
+                <span asp-validation-for="optionDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="strikePrice" class="control-label"></label>
+                <input asp-for="strikePrice" class="form-control" />
+                <span asp-validation-for="strikePrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="openDateTime" class="control-label"></label>
+                <input asp-for="openDateTime" class="form-control" />
+                <span asp-validation-for="openDateTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="openBatch" class="control-label"></label>
+                <input asp-for="openBatch" class="form-control" />
+                <span asp-validation-for="openBatch" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="openBatchDateTime" class="control-label"></label>
+                <input asp-for="openBatchDateTime" class="form-control" />
+                <span asp-validation-for="openBatchDateTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="openSinalId" class="control-label"></label>
+                <input asp-for="openSinalId" class="form-control" />
+                <span asp-validation-for="openSinalId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="openStokePrice" class="control-label"></label>
+                <input asp-for="openStokePrice" class="form-control" />
+                <span asp-validation-for="openStokePrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="openCost" class="control-label"></label>
+                <input asp-for="openCost" class="form-control" />
+                <span asp-validation-for="openCost" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="closeDateTime" class="control-label"></label>
+                <input asp-for="closeDateTime" class="form-control" />
+                <span asp-validation-for="closeDateTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="closeBatch" class="control-label"></label>
+                <input asp-for="closeBatch" class="form-control" />
+                <span asp-validation-for="closeBatch" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="closeBatchDateTime" class="control-label"></label>
+                <input asp-for="closeBatchDateTime" class="form-control" />
+                <span asp-validation-for="closeBatchDateTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="closeSinalId" class="control-label"></label>
+                <input asp-for="closeSinalId" class="form-control" />
+                <span asp-validation-for="closeSinalId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="closeStokePrice" class="control-label"></label>
+                <input asp-for="closeStokePrice" class="form-control" />
+                <span asp-validation-for="closeStokePrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="closeCost" class="control-label"></label>
+                <input asp-for="closeCost" class="form-control" />
+                <span asp-validation-for="closeCost" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PnL" class="control-label"></label>
+                <input asp-for="PnL" class="form-control" />
+                <span asp-validation-for="PnL" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PnLPercentage" class="control-label"></label>
+                <input asp-for="PnLPercentage" class="form-control" />
+                <span asp-validation-for="PnLPercentage" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="percentFlag1" class="control-label"></label>
+                <input asp-for="percentFlag1" class="form-control" />
+                <span asp-validation-for="percentFlag1" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="expectedPnL1" class="control-label"></label>
+                <input asp-for="expectedPnL1" class="form-control" />
+                <span asp-validation-for="expectedPnL1" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="actualPnL1" class="control-label"></label>
+                <input asp-for="actualPnL1" class="form-control" />
+                <span asp-validation-for="actualPnL1" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="batch1" class="control-label"></label>
+                <input asp-for="batch1" class="form-control" />
+                <span asp-validation-for="batch1" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="percentFlag2" class="control-label"></label>
+                <input asp-for="percentFlag2" class="form-control" />
+                <span asp-validation-for="percentFlag2" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="expectedPnL2" class="control-label"></label>
+                <input asp-for="expectedPnL2" class="form-control" />
+                <span asp-validation-for="expectedPnL2" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="actualPnL2" class="control-label"></label>
+                <input asp-for="actualPnL2" class="form-control" />
+                <span asp-validation-for="actualPnL2" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="batch2" class="control-label"></label>
+                <input asp-for="batch2" class="form-control" />
+                <span asp-validation-for="batch2" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="percentFlag3" class="control-label"></label>
+                <input asp-for="percentFlag3" class="form-control" />
+                <span asp-validation-for="percentFlag3" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="expectedPnL3" class="control-label"></label>
+                <input asp-for="expectedPnL3" class="form-control" />
+                <span asp-validation-for="expectedPnL3" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="actualPnL3" class="control-label"></label>
+                <input asp-for="actualPnL3" class="form-control" />
+                <span asp-validation-for="actualPnL3" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="batch3" class="control-label"></label>
+                <input asp-for="batch3" class="form-control" />
+                <span asp-validation-for="batch3" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="percentFlag4" class="control-label"></label>
+                <input asp-for="percentFlag4" class="form-control" />
+                <span asp-validation-for="percentFlag4" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="expectedPnL4" class="control-label"></label>
+                <input asp-for="expectedPnL4" class="form-control" />
+                <span asp-validation-for="expectedPnL4" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="actualPnL4" class="control-label"></label>
+                <input asp-for="actualPnL4" class="form-control" />
+                <span asp-validation-for="actualPnL4" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="batch4" class="control-label"></label>
+                <input asp-for="batch4" class="form-control" />
+                <span asp-validation-for="batch4" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="percentFlag5" class="control-label"></label>
+                <input asp-for="percentFlag5" class="form-control" />
+                <span asp-validation-for="percentFlag5" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="expectedPnL5" class="control-label"></label>
+                <input asp-for="expectedPnL5" class="form-control" />
+                <span asp-validation-for="expectedPnL5" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="actualPnL5" class="control-label"></label>
+                <input asp-for="actualPnL5" class="form-control" />
+                <span asp-validation-for="actualPnL5" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="batch5" class="control-label"></label>
+                <input asp-for="batch5" class="form-control" />
+                <span asp-validation-for="batch5" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

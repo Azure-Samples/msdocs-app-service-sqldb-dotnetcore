@@ -20,5 +20,31 @@
         public double closeStokePrice { get; set; }
         public double closeCost { get; set; }
         public double PnL { get; set; }
+        public string PnLPercentage { get; set; }
+
+        public string percentFlag1 { get; set; }
+        public double expectedPnL1 { get; set; }
+        public double actualPnL1 { get; set; }
+        public long batch1 { get; set; }
+
+        public string percentFlag2 { get; set; }
+        public double expectedPnL2 { get; set; }
+        public double actualPnL2 { get; set; }
+        public long batch2 { get; set; }
+
+        public string percentFlag3 { get; set; }
+        public double expectedPnL3 { get; set; }
+        public double actualPnL3 { get; set; }
+        public long batch3 { get; set; }
+
+        public string percentFlag4 { get; set; }
+        public double expectedPnL4 { get; set; }
+        public double actualPnL4 { get; set; }
+        public long batch4 { get; set; }
+
+        public string percentFlag5 { get; set; }
+        public double expectedPnL5 { get; set; }
+        public double actualPnL5 { get; set; }
+        public long batch5 { get; set; }
     }
 }

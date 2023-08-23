@@ -10,16 +10,16 @@ using DotNetCoreSqlDb.Models;
 
 namespace DotNetCoreSqlDb.Controllers
 {
-    public class OrderBookOptionBuyingViewController : Controller
+    public class OrderBookOptionBuyingsController : Controller
     {
         private readonly CoreDbContext _context;
 
-        public OrderBookOptionBuyingViewController(CoreDbContext context)
+        public OrderBookOptionBuyingsController(CoreDbContext context)
         {
             _context = context;
         }
 
-        // GET: OrderBookOptionBuyingView
+        // GET: OrderBookOptionBuyings
         public async Task<IActionResult> Index()
         {
               return _context.OrderBookOptionBuying != null ? 
@@ -27,7 +27,7 @@ namespace DotNetCoreSqlDb.Controllers
                           Problem("Entity set 'CoreDbContext.OrderBookOptionBuying'  is null.");
         }
 
-        // GET: OrderBookOptionBuyingView/Details/5
+        // GET: OrderBookOptionBuyings/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.OrderBookOptionBuying == null)
@@ -45,18 +45,18 @@ namespace DotNetCoreSqlDb.Controllers
             return View(orderBookOptionBuying);
         }
 
-        // GET: OrderBookOptionBuyingView/Create
+        // GET: OrderBookOptionBuyings/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: OrderBookOptionBuyingView/Create
+        // POST: OrderBookOptionBuyings/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,symbol,optionType,optionDate,strikePrice,openDateTime,openBatch,openBatchDateTime,openSinalId,openStokePrice,openCost,closeDateTime,closeBatch,closeBatchDateTime,closeSinalId,closeStokePrice,closeCost,PnL")] OrderBookOptionBuying orderBookOptionBuying)
+        public async Task<IActionResult> Create([Bind("id,symbol,optionType,optionDate,strikePrice,openDateTime,openBatch,openBatchDateTime,openSinalId,openStokePrice,openCost,closeDateTime,closeBatch,closeBatchDateTime,closeSinalId,closeStokePrice,closeCost,PnL,PnLPercentage,percentFlag1,expectedPnL1,actualPnL1,batch1,percentFlag2,expectedPnL2,actualPnL2,batch2,percentFlag3,expectedPnL3,actualPnL3,batch3,percentFlag4,expectedPnL4,actualPnL4,batch4,percentFlag5,expectedPnL5,actualPnL5,batch5")] OrderBookOptionBuying orderBookOptionBuying)
         {
             if (ModelState.IsValid)
             {
@@ -67,7 +67,7 @@ namespace DotNetCoreSqlDb.Controllers
             return View(orderBookOptionBuying);
         }
 
-        // GET: OrderBookOptionBuyingView/Edit/5
+        // GET: OrderBookOptionBuyings/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.OrderBookOptionBuying == null)
@@ -83,12 +83,12 @@ namespace DotNetCoreSqlDb.Controllers
             return View(orderBookOptionBuying);
         }
 
-        // POST: OrderBookOptionBuyingView/Edit/5
+        // POST: OrderBookOptionBuyings/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,symbol,optionType,optionDate,strikePrice,openDateTime,openBatch,openBatchDateTime,openSinalId,openStokePrice,openCost,closeDateTime,closeBatch,closeBatchDateTime,closeSinalId,closeStokePrice,closeCost,PnL")] OrderBookOptionBuying orderBookOptionBuying)
+        public async Task<IActionResult> Edit(int id, [Bind("id,symbol,optionType,optionDate,strikePrice,openDateTime,openBatch,openBatchDateTime,openSinalId,openStokePrice,openCost,closeDateTime,closeBatch,closeBatchDateTime,closeSinalId,closeStokePrice,closeCost,PnL,PnLPercentage,percentFlag1,expectedPnL1,actualPnL1,batch1,percentFlag2,expectedPnL2,actualPnL2,batch2,percentFlag3,expectedPnL3,actualPnL3,batch3,percentFlag4,expectedPnL4,actualPnL4,batch4,percentFlag5,expectedPnL5,actualPnL5,batch5")] OrderBookOptionBuying orderBookOptionBuying)
         {
             if (id != orderBookOptionBuying.id)
             {
@@ -118,7 +118,7 @@ namespace DotNetCoreSqlDb.Controllers
             return View(orderBookOptionBuying);
         }
 
-        // GET: OrderBookOptionBuyingView/Delete/5
+        // GET: OrderBookOptionBuyings/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.OrderBookOptionBuying == null)
@@ -136,7 +136,7 @@ namespace DotNetCoreSqlDb.Controllers
             return View(orderBookOptionBuying);
         }
 
-        // POST: OrderBookOptionBuyingView/Delete/5
+        // POST: OrderBookOptionBuyings/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

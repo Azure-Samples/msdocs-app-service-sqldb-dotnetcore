@@ -22,6 +22,7 @@ var optionsBuilder = new DbContextOptionsBuilder<CoreDbContext>();
 optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("MyDbConnection"));
 
 builder.Services.AddSingleton<IHostedService>(serviceProvider => new HealtherService(new CoreDbContext(optionsBuilder.Options)));
+builder.Services.AddSingleton<IHostedService>(serviceProvider => new PercentageCheckService(new CoreDbContext(optionsBuilder.Options)));
 builder.Services.AddSingleton<IHostedService>(serviceProvider => new CloseAllEoDService(new CoreDbContext(optionsBuilder.Options)));
 
 
