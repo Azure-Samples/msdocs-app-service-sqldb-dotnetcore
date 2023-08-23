@@ -26,8 +26,10 @@ public sealed class CloseAllEoDService : BackgroundService
 
                 if (time > new TimeSpan(15, 58, 30) && time < new TimeSpan(15, 59, 55))
                 {
-                    eTrade.CloseAll(_context);
-                    Console.WriteLine($"Closing All Orders by EoD Service");
+                    var optionDate = Help.GetEstDatetime().ToShortDateString();
+                    eTrade.CloseAll(_context, optionDate);
+
+                    Console.WriteLine($"Closing all orders by EOD job");
                 }
 
                 if (time > new TimeSpan(15, 50, 00) && time < new TimeSpan(15, 59, 59))
@@ -47,7 +49,5 @@ public sealed class CloseAllEoDService : BackgroundService
                 Console.WriteLine(ex.ToString());
             }
         }
-    }
-
-    
+    }    
 }

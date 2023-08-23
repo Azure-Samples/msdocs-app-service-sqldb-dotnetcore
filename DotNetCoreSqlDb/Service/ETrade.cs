@@ -393,7 +393,7 @@ public class ETrade
         }
     }
 
-    public void CloseAll(CoreDbContext _context)
+    public void CloseAll(CoreDbContext _context, string optionDate)
     {
         var users = _context.User.ToList();
         DateTimeOffset now = (DateTimeOffset)Help.GetEstDatetime();
