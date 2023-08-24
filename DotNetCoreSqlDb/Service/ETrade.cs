@@ -536,8 +536,9 @@ public class ETrade
             {
                 parentId = order.id,
                 dateTime = option.BatchDateTime,
+                batch = option.Batch,
                 PnL = option.Bid - order.openCost,
-                PnLPercentage = order.openCost != 0 ? (option.Bid - order.openCost / order.openCost).ToString("0.00%") : ""
+                PnLPercentage = order.openCost != 0 ? ((option.Bid - order.openCost) / order.openCost).ToString("0.00%") : ""
             };
 
 
@@ -597,8 +598,9 @@ public class ETrade
             {
                 parentId = order.id,
                 dateTime = option.BatchDateTime,
+                batch = option.Batch,
                 PnL = order.openCost - option.Ask,
-                PnLPercentage = order.openCost != 0 ? (order.openCost - option.Ask / order.openCost).ToString("0.00%") : ""
+                PnLPercentage = order.openCost != 0 ? ((order.openCost - option.Ask) / order.openCost).ToString("0.00%") : ""
             };
 
             _context.Option.Add(option);
