@@ -37,5 +37,13 @@ namespace DotNetCoreSqlDb.Data
         #region Required
         public DbSet<DotNetCoreSqlDb.Models.OrderBookOptionBuying> OrderBookOptionBuying { get; set; } = default!;
         #endregion
+
+        #region Required
+        public DbSet<DotNetCoreSqlDb.Models.OptionBuyingPnLTracker> OptionBuyingPnLTracker { get; set; } = default!;
+        #endregion
+
+        #region Required
+        public DbSet<DotNetCoreSqlDb.Models.OptionSellingPnLTracker> OptionSellingPnLTracker { get; set; } = default!;
+        #endregion
     }
 }
