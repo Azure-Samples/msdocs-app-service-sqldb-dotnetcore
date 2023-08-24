@@ -547,34 +547,35 @@ public class ETrade
     {
         if (order != null)
         {
+
             bool changeFlag = false;
-            if (order.batch1 <= 0 && (option.Ask - order.openCost) > order.expectedPnL1)
+            if (order.batch1 <= 0 && (order.openCost - option.Ask) > order.expectedPnL1)
             {
-                order.actualPnL1 = option.Ask - order.openCost;
+                order.actualPnL1 = order.openCost - option.Ask;
                 order.batch1 = batchId;
                 changeFlag = true;
             }
-            if (order.batch2 <= 0 && (option.Ask - order.openCost) > order.expectedPnL2)
+            if (order.batch2 <= 0 && (order.openCost - option.Ask) > order.expectedPnL2)
             {
-                order.actualPnL2 = option.Ask - order.openCost;
+                order.actualPnL2 = order.openCost - option.Ask;
                 order.batch2 = batchId;
                 changeFlag = true;
             }
-            if (order.batch3 <= 0 && (option.Ask - order.openCost) > order.expectedPnL3)
+            if (order.batch3 <= 0 && (order.openCost - option.Ask) > order.expectedPnL3)
             {
-                order.actualPnL3 = option.Ask - order.openCost;
+                order.actualPnL3 = order.openCost - option.Ask;
                 order.batch3 = batchId;
                 changeFlag = true;
             }
-            if (order.batch4 <= 0 && (option.Ask - order.openCost) > order.expectedPnL4)
+            if (order.batch4 <= 0 && (order.openCost - option.Ask) > order.expectedPnL4)
             {
-                order.actualPnL4 = option.Ask - order.openCost;
+                order.actualPnL4 = order.openCost - option.Ask;
                 order.batch4 = batchId;
                 changeFlag = true;
             }
-            if (order.batch5 <= 0 && (option.Ask - order.openCost) > order.expectedPnL5)
+            if (order.batch5 <= 0 && (order.openCost - option.Ask) > order.expectedPnL5)
             {
-                order.actualPnL5 = option.Ask - order.openCost;
+                order.actualPnL5 = order.openCost - option.Ask;
                 order.batch5 = batchId;
                 changeFlag = true;
             }
