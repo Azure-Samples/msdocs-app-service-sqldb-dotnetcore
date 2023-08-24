@@ -76,6 +76,7 @@ public class ETrade
             openCost = option.Ask,
             openDateTime = Help.GetEstDatetime(),
             closeBatchDateTime = option.BatchDateTime,
+            PnLPercentage = string.Empty,
             //=========================================
             percentFlag1 = "@10%",
             expectedPnL1 = Math.Round(option.Ask * 0.1, 3),
@@ -133,6 +134,7 @@ public class ETrade
             openCost = option.Bid,
             openDateTime = Help.GetEstDatetime(),
             closeBatchDateTime = option.BatchDateTime,
+            PnLPercentage = string.Empty,
             //=========================================
             percentFlag1 = "@10%",
             expectedPnL1 = Math.Round(option.Bid * 0.1, 3),

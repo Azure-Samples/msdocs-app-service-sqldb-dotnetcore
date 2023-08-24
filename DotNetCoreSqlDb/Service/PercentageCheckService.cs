@@ -15,14 +15,14 @@ public sealed class PercentageCheckService : BackgroundService
     }
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        int delay = 500;        
+        int delay = 2000;        
 
         while (!stoppingToken.IsCancellationRequested)
         {
             try
             {
                 TimeSpan time = Help.GetEstDatetime().TimeOfDay;
-                if (time > new TimeSpan(09, 31, 30) && time < new TimeSpan(23, 59, 55))
+                if (time > new TimeSpan(09, 31, 30) && time < new TimeSpan(15, 59, 55))
                 {                   
                     var eTrade = new ETrade();
                     var optionDate = Help.GetEstDatetime().ToShortDateString();
