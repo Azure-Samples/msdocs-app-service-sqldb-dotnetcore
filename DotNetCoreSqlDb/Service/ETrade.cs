@@ -59,7 +59,7 @@ public class ETrade
         return options.First();
     }
 
-    
+
     public void OpenOrderOptionBuying(CoreDbContext context, Option option, int singalId)
     {
 
@@ -113,7 +113,7 @@ public class ETrade
         orderBookOptionBuying.closeStokePrice = option.Price;
         orderBookOptionBuying.closeCost = option.Bid;
         orderBookOptionBuying.PnL = Math.Round(orderBookOptionBuying.closeCost - orderBookOptionBuying.openCost, 3);
-        if(orderBookOptionBuying.openCost > 0) orderBookOptionBuying.PnLPercentage = (orderBookOptionBuying.PnL / orderBookOptionBuying.openCost).ToString("0.00%");
+        if (orderBookOptionBuying.openCost > 0) orderBookOptionBuying.PnLPercentage = (orderBookOptionBuying.PnL / orderBookOptionBuying.openCost).ToString("0.00%");
 
         context.Update(orderBookOptionBuying);
         context.SaveChanges();
@@ -387,7 +387,7 @@ public class ETrade
 
         if (tVSignal.Signal.ToUpper().Equals("LONG") && tVSignal.Period.Equals(emaPeriodFactor))
         {
-            string closeOptionType = "PUT";          
+            string closeOptionType = "PUT";
 
             var putOrderBook = _context.OrderBookOptionBuying.ToList().Where(a => a.symbol.Contains(tVSignal.Simbol) && Convert.ToDateTime(a.optionDate) == Convert.ToDateTime(optionDate) && a.optionType == closeOptionType && a.closeBatch <= 0).ToList();
             foreach (var order in putOrderBook)
@@ -398,7 +398,7 @@ public class ETrade
         }
         else if (tVSignal.Signal.ToUpper().Equals("SHORT") && tVSignal.Period.Equals(emaPeriodFactor))
         {
-            string closeOptionType = "CALL";           
+            string closeOptionType = "CALL";
             var callOrderBook = _context.OrderBookOptionBuying.ToList().Where(a => a.symbol.Contains(tVSignal.Simbol) && Convert.ToDateTime(a.optionDate) == Convert.ToDateTime(optionDate) && a.optionType == closeOptionType && a.closeBatch <= 0).ToList();
 
             foreach (var order in callOrderBook)
@@ -464,7 +464,7 @@ public class ETrade
         {
             var option = this.GetOptionDetails(_context, users.First(), order.optionDate, order.symbol, order.strikePrice, order.strikePrice, order.optionType, batchId, batchDateTime);
             this.CloseOrderOptionSelling(_context, order, option, order.id);
-        }        
+        }
     }
 
     public void PercentageCheck(CoreDbContext _context, string optionDate)
@@ -472,27 +472,27 @@ public class ETrade
         var users = _context.User.ToList();
         DateTimeOffset now = (DateTimeOffset)Help.GetEstDatetime();
         var batchId = now.ToUnixTimeSeconds();
-        var batchDateTime = now.ToString("yyyy-MM-dd hh:mm:ss.fff tt");      
-            
+        var batchDateTime = now.ToString("yyyy-MM-dd hh:mm:ss.fff tt");
+
         var callOrderBookOptionBuying = _context.OrderBookOptionBuying.ToList().Where(a => a.closeBatch <= 0 && DateTime.Parse(a.optionDate, new CultureInfo("en-US", true)) == DateTime.Parse(optionDate, new CultureInfo("en-US", true))).ToList();
         foreach (var order in callOrderBookOptionBuying)
         {
-            if(order.actualPnL5 <= 0)
-            {
-                var option = this.GetOptionDetails(_context, users.First(), order.optionDate, order.symbol, order.strikePrice, order.strikePrice, order.optionType, batchId, batchDateTime, false);
-                OrderBookOptionBuyingUpdatePercentage(_context, batchId, order, option);
-            }
-           
+            //if (order.actualPnL5 <= 0)
+            //{
+            var option = this.GetOptionDetails(_context, users.First(), order.optionDate, order.symbol, order.strikePrice, order.strikePrice, order.optionType, batchId, batchDateTime, false);
+            OrderBookOptionBuyingUpdatePercentage(_context, batchId, order, option);
+            //}
+
         }
 
         var callOrderBookOptionSelling = _context.OrderBookOptionSelling.ToList().Where(a => a.closeBatch <= 0 && DateTime.Parse(a.optionDate, new CultureInfo("en-US", true)) == DateTime.Parse(optionDate, new CultureInfo("en-US", true))).ToList();
         foreach (var order in callOrderBookOptionSelling)
         {
-            if (order.actualPnL5 <= 0)
-            {
-                var option = this.GetOptionDetails(_context, users.First(), order.optionDate, order.symbol, order.strikePrice, order.strikePrice, order.optionType, batchId, batchDateTime, false);
-                OrderBookOptionSellingUpdatePercentage(_context, batchId, order, option);
-            }
+            //if (order.actualPnL5 <= 0)
+            //{
+            var option = this.GetOptionDetails(_context, users.First(), order.optionDate, order.symbol, order.strikePrice, order.strikePrice, order.optionType, batchId, batchDateTime, false);
+            OrderBookOptionSellingUpdatePercentage(_context, batchId, order, option);
+            //}
         }
     }
 
@@ -532,11 +532,23 @@ public class ETrade
                 changeFlag = true;
             }
 
+            var optionbuyingPnLTracker = new OptionBuyingPnLTracker
+            {
+                parentId = order.id,
+                dateTime = option.BatchDateTime,
+                PnL = option.Bid - order.openCost,
+                PnLPercentage = order.openCost != 0 ? (option.Bid - order.openCost / order.openCost).ToString("0.00%") : ""
+            };
+
+
+            _context.Option.Add(option);
+            _context.SaveChanges();
+
+            _context.OptionBuyingPnLTracker.Add(optionbuyingPnLTracker);
+            _context.SaveChanges();
+
             if (changeFlag)
             {
-                _context.Option.Add(option);
-                _context.SaveChanges();
-
                 _context.Update(order);
                 _context.SaveChanges();
             }
@@ -580,15 +592,25 @@ public class ETrade
                 changeFlag = true;
             }
 
+
+            var optionSellingPnLTracker = new OptionSellingPnLTracker
+            {
+                parentId = order.id,
+                dateTime = option.BatchDateTime,
+                PnL = order.openCost - option.Ask,
+                PnLPercentage = order.openCost != 0 ? (order.openCost - option.Ask / order.openCost).ToString("0.00%") : ""
+            };
+
+            _context.Option.Add(option);
+            _context.SaveChanges();
+
+            _context.OptionSellingPnLTracker.Add(optionSellingPnLTracker);
+            _context.SaveChanges();
+
             if (changeFlag)
             {
-                _context.Option.Add(option);
-                _context.SaveChanges();
-
                 _context.Update(order);
                 _context.SaveChanges();
-
-                
             }
         }
     }
