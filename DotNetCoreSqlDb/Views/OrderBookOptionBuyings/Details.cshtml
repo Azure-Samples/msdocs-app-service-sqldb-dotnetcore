@@ -1,0 +1,247 @@
+﻿@model DotNetCoreSqlDb.Models.OrderBookOptionBuying
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>OrderBookOptionBuying</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.symbol)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.symbol)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.optionType)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.optionType)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.optionDate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.optionDate)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strikePrice)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strikePrice)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.openDateTime)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.openDateTime)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.openBatch)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.openBatch)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.openBatchDateTime)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.openBatchDateTime)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.openSinalId)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.openSinalId)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.openStokePrice)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.openStokePrice)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.openCost)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.openCost)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.closeDateTime)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.closeDateTime)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.closeBatch)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.closeBatch)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.closeBatchDateTime)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.closeBatchDateTime)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.closeSinalId)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.closeSinalId)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.closeStokePrice)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.closeStokePrice)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.closeCost)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.closeCost)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.PnL)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.PnL)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.PnLPercentage)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.PnLPercentage)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.percentFlag1)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.percentFlag1)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.expectedPnL1)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.expectedPnL1)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.actualPnL1)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.actualPnL1)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.batch1)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.batch1)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.percentFlag2)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.percentFlag2)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.expectedPnL2)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.expectedPnL2)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.actualPnL2)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.actualPnL2)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.batch2)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.batch2)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.percentFlag3)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.percentFlag3)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.expectedPnL3)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.expectedPnL3)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.actualPnL3)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.actualPnL3)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.batch3)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.batch3)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.percentFlag4)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.percentFlag4)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.expectedPnL4)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.expectedPnL4)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.actualPnL4)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.actualPnL4)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.batch4)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.batch4)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.percentFlag5)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.percentFlag5)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.expectedPnL5)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.expectedPnL5)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.actualPnL5)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.actualPnL5)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.batch5)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.batch5)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
