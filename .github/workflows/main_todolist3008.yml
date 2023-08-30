@@ -27,12 +27,6 @@ jobs:
 
       - name: dotnet publish
         run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
-      
-      - name: dotnet install ef
-        run: dotnet tool install -g dotnet -ef
-      
-      - name: dotnet bindle migration
-        run: dotnet ef migrations bundle --runtime linux-x64 -p DotNetCoreSqlDb/DotNetCoreSqlDb.csproj -o ${{env.DOTNET_ROOT}}/myapp/migrate
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
@@ -59,5 +53,5 @@ jobs:
         with:
           app-name: 'ToDoList3008'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_C3B8021E5D774B8DA931F8A190EE3A4D }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_279DEA8141A64823BFA95B6D9E62C927 }}
           package: .
