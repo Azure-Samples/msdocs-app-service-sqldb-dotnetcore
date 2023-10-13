@@ -4,7 +4,7 @@ using DotNetCoreSqlDb.Data;
 using Microsoft.Data.SqlClient;
 using Azure.Identity;
 
-
+ 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add database context and cache
