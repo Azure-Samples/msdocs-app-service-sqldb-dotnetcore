@@ -4,10 +4,8 @@ using DotNetCoreSqlDb.Data;
 var builder = WebApplication.CreateBuilder(args);
 
 
+builder.Services.AddSqlServer<ApplicationDbContext>(builder.Configuration.GetConnectionString("AZURE_POSTGRESQL_CONNECTIONSTRING"));
 
-
-// Add database context and cache
-services.AddSqlServer<ApplicationDbContext>(configuration.GetConnectionString("AZURE_POSTGRESQL_CONNECTIONSTRING"));
 
 
 builder.Services.AddStackExchangeRedisCache(options =>
