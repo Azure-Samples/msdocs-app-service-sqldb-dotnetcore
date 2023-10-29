@@ -69,7 +69,7 @@ namespace DotNetCoreSqlDb.Controllers
         // POST: ElectricalTestResults/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,JobNameOrNumber,CircuitLocation,CircuitNameOrDesignation,VisualInspection,ProtectionSizeOrType,NeutralNumber,NumberOfPhases,CableSize,EarthSize,ShortCircuitPass,InterconnectPass,PolarityPass,ContinuityOhms,InsulationResistance,FaultLoopImpedance,RcdTripTime,CreatedDate,UserId,TimeStamp")] ElectricalTestResult result)
+        public async Task<IActionResult> Create([Bind("Id,JobNameOrNumber,CircuitLocation,CircuitNameOrDesignation,VisualInspection,ProtectionSizeOrType,NeutralNumber,NumberOfPhases,CableSize,EarthSize,ShortCircuitPass,InterconnectPass,PolarityPass,ContinuityOhms,InsulationResistance,FaultLoopImpedance,RcdTripTime,CreatedDate,TesterName,TimeStamp")] ElectricalTestResult result)
         {
             if (ModelState.IsValid)
             {
@@ -100,7 +100,7 @@ namespace DotNetCoreSqlDb.Controllers
         // POST: ElectricalTestResults/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,JobNameOrNumber,CircuitLocation,CircuitNameOrDesignation,VisualInspection,ProtectionSizeOrType,NeutralNumber,NumberOfPhases,CableSize,EarthSize,ShortCircuitPass,InterconnectPass,PolarityPass,ContinuityOhms,InsulationResistance,FaultLoopImpedance,RcdTripTime,CreatedDate,UserId,TimeStamp")] ElectricalTestResult result)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,JobNameOrNumber,CircuitLocation,CircuitNameOrDesignation,VisualInspection,ProtectionSizeOrType,NeutralNumber,NumberOfPhases,CableSize,EarthSize,ShortCircuitPass,InterconnectPass,PolarityPass,ContinuityOhms,InsulationResistance,FaultLoopImpedance,RcdTripTime,CreatedDate,TesterName,TimeStamp")] ElectricalTestResult result)
         {
             if (id != result.Id)
             {

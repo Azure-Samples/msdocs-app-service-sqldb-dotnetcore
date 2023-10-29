@@ -30,7 +30,7 @@ namespace DotNetCoreSqlDb.Models
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime CreatedDate { get; set; }
-        public string UserId { get; set; } // Foreign Key to User table
+        public string TesterName { get; set; }
 
         // TimeStamp property automatically set when a new instance is created
         public DateTime TimeStamp { get; private set; } = DateTime.UtcNow;
