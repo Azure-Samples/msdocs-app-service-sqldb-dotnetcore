@@ -32,19 +32,10 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.JobNameOrNumber)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CircuitLocation)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CreatedDate)
-                </td>
-                <th>
-                    @Html.DisplayNameFor(model => model.CircuitNameOrDesignation)
-                </th>
-                <!-- ... display other properties as necessary ... -->
+                <td>@Html.DisplayFor(modelItem => item.JobNameOrNumber)</td>
+                <td>@Html.DisplayFor(modelItem => item.CircuitLocation)</td>
+                <td>@Html.DisplayFor(modelItem => item.CircuitNameOrDesignation)</td>
+                <td>@Html.DisplayFor(modelItem => item.CreatedDate)</td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                     <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
