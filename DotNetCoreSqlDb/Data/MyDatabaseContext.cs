@@ -14,6 +14,7 @@ namespace DotNetCoreSqlDb.Data
         {
         }
 
-        public DbSet<DotNetCoreSqlDb.Models.Todo> Todo { get; set; } = default!;
+        public DbSet<DotNetCoreSqlDb.Models.Todo> Todo { get; set; }
+        public DbSet<DotNetCoreSqlDb.Models.ElectricalTestResult> ElectricalTestResults { get; set; }
     }
 }
