@@ -9,10 +9,12 @@ using DotNetCoreSqlDb;
 using DotNetCoreSqlDb.Data;
 using DotNetCoreSqlDb.Models;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DotNetCoreSqlDb.Controllers
 {
     [ActionTimerFilter]
+    [Authorize]
     public class TodosController : Controller
     {
         private readonly MyDatabaseContext _context;

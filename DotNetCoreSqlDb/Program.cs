@@ -1,6 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using DotNetCoreSqlDb.Data;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.Identity.Web;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.Identity.Web.UI;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add database context
@@ -22,8 +29,19 @@ else
     });
 }
 
-// Add services to the container.
-builder.Services.AddControllersWithViews();
+// Add authentication and configure it for Azure AD B2C
+builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
+    .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAd"));
+
+// Add controllers with views and require authenticated user
+builder.Services.AddControllersWithViews(options =>
+{
+    var policy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
+    options.Filters.Add(new AuthorizeFilter(policy));
+});
+builder.Services.AddRazorPages().AddMicrosoftIdentityUI();
 
 // Add App Service logging
 builder.Logging.AddAzureWebAppDiagnostics();
@@ -42,11 +60,15 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseAuthentication();  // Add this line to enable authentication
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=ElectricalTestResults}/{action=Index}/{id?}");
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=ElectricalTestResults}/{action=Index}/{id?}");
+    endpoints.MapRazorPages();
+});
 
 app.Run();
