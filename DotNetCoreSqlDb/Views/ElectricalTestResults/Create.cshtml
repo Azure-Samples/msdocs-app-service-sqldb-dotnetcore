@@ -1,0 +1,167 @@
+﻿@model DotNetCoreSqlDb.Models.ElectricalTestResult
+
+@{
+    ViewData["Title"] = "Create Electrical Test Record";
+}
+
+<h1>Create Electrical Test Record</h1>
+
+<h4>Electrical Test Result</h4>
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <!-- Job Name/Number -->
+            <div class="form-group">
+                <label asp-for="JobNameOrNumber" class="control-label"></label>
+                <input asp-for="JobNameOrNumber" class="form-control" />
+                <span asp-validation-for="JobNameOrNumber" class="text-danger"></span>
+            </div>
+
+            <!-- Circuit Location -->
+            <div class="form-group">
+                <label asp-for="CircuitLocation" class="control-label"></label>
+                <input asp-for="CircuitLocation" class="form-control" />
+                <span asp-validation-for="CircuitLocation" class="text-danger"></span>
+            </div>
+
+            <!-- Circuit Name/Designation -->
+            <div class="form-group">
+                <label asp-for="CircuitNameOrDesignation" class="control-label"></label>
+                <input asp-for="CircuitNameOrDesignation" class="form-control" />
+                <span asp-validation-for="CircuitNameOrDesignation" class="text-danger"></span>
+            </div>
+
+            <!-- Visual Inspection -->
+            <div class="form-group">
+                <label asp-for="VisualInspection" class="control-label"></label>
+                <input asp-for="VisualInspection" class="form-control" />
+                <span asp-validation-for="VisualInspection" class="text-danger"></span>
+            </div>
+
+            <!-- Protection Size/Type -->
+            <div class="form-group">
+                <label asp-for="ProtectionSizeOrType" class="control-label"></label>
+                <input asp-for="ProtectionSizeOrType" class="form-control" />
+                <span asp-validation-for="ProtectionSizeOrType" class="text-danger"></span>
+            </div>
+
+            <!-- Neutral Number -->
+            <div class="form-group">
+                <label asp-for="NeutralNumber" class="control-label"></label>
+                <input asp-for="NeutralNumber" class="form-control" />
+                <span asp-validation-for="NeutralNumber" class="text-danger"></span>
+            </div>
+
+            <!-- Number of Phases -->
+            <div class="form-group">
+                <label asp-for="NumberOfPhases" class="control-label"></label>
+                <input asp-for="NumberOfPhases" class="form-control" type="number" />
+                <span asp-validation-for="NumberOfPhases" class="text-danger"></span>
+            </div>
+
+            <!-- Cable Size -->
+            <div class="form-group">
+                <label asp-for="CableSize" class="control-label"></label>
+                <input asp-for="CableSize" class="form-control" />
+                <span asp-validation-for="CableSize" class="text-danger"></span>
+            </div>
+
+            <!-- Earth Size -->
+            <div class="form-group">
+                <label asp-for="EarthSize" class="control-label"></label>
+                <input asp-for="EarthSize" class="form-control" />
+                <span asp-validation-for="EarthSize" class="text-danger"></span>
+            </div>
+
+            <!-- Short Circuit Pass/Fail -->
+            <div class="form-group">
+                <label asp-for="ShortCircuitPass" class="control-label"></label>
+                <select asp-for="ShortCircuitPass" class="form-control">
+                    <option value="true">Pass</option>
+                    <option value="false">Fail</option>
+                </select>
+                <span asp-validation-for="ShortCircuitPass" class="text-danger"></span>
+            </div>
+
+            <!-- Interconnect Pass/Fail -->
+            <div class="form-group">
+                <label asp-for="InterconnectPass" class="control-label"></label>
+                <select asp-for="InterconnectPass" class="form-control">
+                    <option value="true">Pass</option>
+                    <option value="false">Fail</option>
+                </select>
+                <span asp-validation-for="InterconnectPass" class="text-danger"></span>
+            </div>
+
+            <!-- Polarity Pass/Fail -->
+            <div class="form-group">
+                <label asp-for="PolarityPass" class="control-label"></label>
+                <select asp-for="PolarityPass" class="form-control">
+                    <option value="true">Pass</option>
+                    <option value="false">Fail</option>
+                </select>
+                <span asp-validation-for="PolarityPass" class="text-danger"></span>
+            </div>
+
+            <!-- Continuity-Ohms -->
+            <div class="form-group">
+                <label asp-for="ContinuityOhms" class="control-label"></label>
+                <input asp-for="ContinuityOhms" class="form-control" type="number" step="0.01" />
+                <span asp-validation-for="ContinuityOhms" class="text-danger"></span>
+            </div>
+
+            <!-- Insulation Resistance -->
+            <div class="form-group">
+                <label asp-for="InsulationResistance" class="control-label"></label>
+                <input asp-for="InsulationResistance" class="form-control" type="number" step="0.01" />
+                <span asp-validation-for="InsulationResistance" class="text-danger"></span>
+            </div>
+
+            <!-- Fault Loop Impedance -->
+            <div class="form-group">
+                <label asp-for="FaultLoopImpedance" class="control-label"></label>
+                <input asp-for="FaultLoopImpedance" class="form-control" type="number" step="0.01" />
+                <span asp-validation-for="FaultLoopImpedance" class="text-danger"></span>
+            </div>
+
+            <!-- Rcd Trip Time -->
+            <div class="form-group">
+                <label asp-for="RcdTripTime" class="control-label"></label>
+                <input asp-for="RcdTripTime" class="form-control" type="number" step="0.01" />
+                <span asp-validation-for="RcdTripTime" class="text-danger"></span>
+            </div>
+
+            <!-- Date Completed -->
+            <div class="form-group">
+                <label asp-for="CreatedDate" class="control-label"></label>
+                <input asp-for="CreatedDate" class="form-control" type="date" />
+                <span asp-validation-for="CreatedDate" class="text-danger"></span>
+            </div>
+
+            <!-- UserId (if needed to be manually entered) -->
+            <div class="form-group">
+                <label asp-for="TesterName" class="control-label"></label>
+                <input asp-for="TesterName" class="form-control" />
+                <span asp-validation-for="TesterName" class="text-danger"></span>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

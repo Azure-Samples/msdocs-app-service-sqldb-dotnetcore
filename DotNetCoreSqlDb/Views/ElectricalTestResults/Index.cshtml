@@ -1,0 +1,47 @@
+﻿@model IEnumerable<DotNetCoreSqlDb.Models.ElectricalTestResult>
+
+@{
+    ViewData["Title"] = "Electrical Test Results Index";
+}
+
+<h1>Electrical Test Results</h1>
+
+<p>
+    <a asp-action="Create">Create New Test Result</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.JobNameOrNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CircuitLocation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CircuitNameOrDesignation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedDate)
+            </th>
+            <!-- ... add other columns as necessary ... -->
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.JobNameOrNumber)</td>
+                <td>@Html.DisplayFor(modelItem => item.CircuitLocation)</td>
+                <td>@Html.DisplayFor(modelItem => item.CircuitNameOrDesignation)</td>
+                <td>@Html.DisplayFor(modelItem => item.CreatedDate)</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
