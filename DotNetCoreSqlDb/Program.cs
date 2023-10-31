@@ -1,20 +1,28 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore.SqlServer;
 using DotNetCoreSqlDb.Data;
+using System.Diagnostics;
+using System.Runtime.Intrinsics.X86;
+
 var builder = WebApplication.CreateBuilder(args);
 
 
-builder.Services.AddSqlServer<ApplicationDbContext>(builder.Configuration.GetConnectionString("AZURE_POSTGRESQL_CONNECTIONSTRING"));
+//builder.Services.AddSqlServer<MyDatabaseContext>(builder.Configuration.GetConnectionString("AZURE_POSTGRESQL_CONNECTIONSTRING"));
 
+
+// Add database context and cache
+builder.Services.AddDbContext<MyDatabaseContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("AZURE_POSTGRESQL_CONNECTIONSTRING")));
 
 
 builder.Services.AddStackExchangeRedisCache(options =>
 {
-options.Configuration = builder.Configuration["AZURE_REDIS_CONNECTIONSTRING"];
+options.Configuration = builder.Configuration.GetConnectionString("AZURE_REDIS_CONNECTIONSTRING");
 options.InstanceName = "SampleInstance";
 });
-
-
 
 
 
