@@ -54,4 +54,4 @@ jobs:
           app-name: 'msdocs-core-sql-db'
           slot-name: 'Production'
           package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_FE333529385A449891F7D9CF13CBCF0D }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_CB39C1EE847F440784EAEB053FBEC2E7 }}
