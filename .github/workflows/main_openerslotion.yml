@@ -14,6 +14,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/setup-node@v4 
       - uses: actions/checkout@v4
 
       - name: Set up .NET Core
@@ -45,12 +46,12 @@ jobs:
 
     steps:
       - name: Download artifact from build job
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: .net-app
       
       - name: Login to Azure
-        uses: azure/login@v1
+        uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_85375BA708884AF2B0A76356C5750A92 }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_BF10A9DB0C0142AA978FB121BD5F68C8 }}
