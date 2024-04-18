@@ -59,15 +59,15 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v1
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_CB15A9DE3D9E48CD8BF2EFF373A27CAC }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_4DCE416B84C54F72BE654F167025FC54 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_BF71B89590EC4129894E8FA5113DCF1B }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_F8FF1839B62D40548D74BC8C042867B7 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_688031A319804199AC013326AE8A5E9D }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'az400-demo'
+          app-name: 'demo-az400'
           slot-name: 'Production'
           package: .
           
