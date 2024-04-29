@@ -9,8 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 //     options.UseSqlServer(builder.Configuration.GetConnectionString("AZURE_MYSQL_CONNECTIONSTRING")));
 
 // Add MySQL connection
-builder.Services.AddTransient<MySqlConnection>(_ =>
-    new MySqlConnection(builder.Configuration.GetConnectionString("AZURE_MYSQL_CONNECTIONSTRING")));
+builder.Services.AddDbContext<MyDatabaseContext>(options =>
+    options.UseMySql(builder.Configuration.GetConnectionString("AZURE_MYSQL_CONNECTIONSTRING"),
+        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("Default"))));
 
 builder.Services.AddStackExchangeRedisCache(options =>
 {
