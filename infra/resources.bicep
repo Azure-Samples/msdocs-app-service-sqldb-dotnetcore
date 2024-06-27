@@ -252,7 +252,7 @@ resource web 'Microsoft.Web/sites@2022-09-01' = {
       linuxFxVersion: 'DOTNETCORE|8.0' // Set to .NET 8 (LTS)
       vnetRouteAllEnabled: true // Route outbound traffic to the VNET
       ftpsState: 'Disabled'
-      appCommandLine: './migrationsbundle && dotnet "DotNetCoreSqlDb.dll"'
+      appCommandLine: './migrationsbundle -- --environment Production && dotnet "DotNetCoreSqlDb.dll"'
     }
     serverFarmId: appServicePlan.id
     httpsOnly: true
