@@ -348,3 +348,12 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+
+# Azure Developer CLI
+.azure
+
+# Visual Studio Code
+.vscode
+
+# OSX
+.DS_Store

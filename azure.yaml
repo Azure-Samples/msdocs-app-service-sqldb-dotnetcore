@@ -1,0 +1,51 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
+# azure.yaml is an azd configuration file and isn't used by the sample application. 
+
+name: dotnet-app-service-sqldb-redis-infra
+metadata:
+  template: dotnet-app-service-sqldb-redis-infra@0.0.1-beta
+services:
+  web:
+    project: .
+    language: csharp
+    host: appservice
+hooks:
+  # The prepackage hook is used to create a runnable migrations bundle to be run in App Service.
+  # The migrationsbundle file is included in DotNetCoreSqlDb.csproj so it can be included in the deploy package.
+  prepackage:
+    posix:
+      shell: sh
+      run: dotnet ef migrations bundle --runtime linux-x64 --force -o migrationsbundle
+      interactive: true
+      continueOnError: true
+  # The postpackage hook is used to remove the migrationsbundle file after deploy package is created.
+  postpackage:
+    posix:
+      shell: sh
+      run: rm migrationsbundle
+      interactive: true
+      continueOnError: true
+  # The postprovision hook is used to display the connection strings and app settings for the App Service app.
+  postprovision:
+    posix: 
+      shell: sh
+      run: printf '\nApp Service app has the following connection strings:\n' && printf "$CONNECTION_SETTINGS" | jq -r '.[]' | sed 's/\(.*\)/\t- \1/' && printf "\nSee the settings in the portal:\n\033[1;36m$WEB_APP_CONNECTIONSTRINGS\n$WEB_APP_APPSETTINGS\n" 
+      interactive: true
+      continueOnError: true
+    windows:
+      shell: pwsh
+      run: Write-Host "`n`nApp Service app has the following connection strings:`n" $CONNECTION_SETTINGS | ConvertFrom-Json | ForEach-Object { Write-Host "\t- $_" }
+      interactive: true
+      continueOnError: true
+  # The postdeploy hook is used to display the SSH session and log stream URLs for the App Service app.
+  postdeploy:
+    posix: 
+      shell: sh
+      run: printf "Open SSH session to App Service container at:\033[1;36m $WEB_APP_SSH\033[0m\nStream App Service logs at:\033[1;36m $WEB_APP_LOG_STREAM\n"
+      interactive: true
+      continueOnError: true
+    windows:
+      shell: pwsh
+      run: Write-Host "`n`nOpen SSH session to App Service container at:`n" $WEB_APP_SSH; Write-Host "Stream App Service logs at:`n" $WEB_APP_LOG_STREAM
+      interactive: true
+      continueOnError: true
