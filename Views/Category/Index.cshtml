@@ -1,0 +1,31 @@
+﻿@{
+    ViewData["Title"] = "Category List";
+}
+<div class="container mt-5">
+    <div class="row category-list-row">
+        <div class="col-10">
+            <h2 class="text-primary">Category List</h2>
+        </div>
+        <div class="col-2 addbutton-container">
+            <a class="" asp-action="Upsert">
+                <i class="fa-solid fa-plus fa-lg" style="color: #74C0FC;"></i>
+            </a>
+        </div>
+    </div>
+</div>
+<div class="border p-2 m-2">
+    <table class="table table-bordered table-striped table-active" id="tblData">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Category</td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

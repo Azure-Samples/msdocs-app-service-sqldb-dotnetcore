@@ -1,17 +1,21 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using DotNetCoreSqlDb.Data;
+using DotNetCoreSqlDb.Repository.IRepository;
+using DotNetCoreSqlDb.Repository;
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddScoped<IUnitOFWork, UnitOfWork>();
 
 // Add database context and cache
 if (builder.Environment.IsDevelopment())
 {
-    builder.Services.AddDbContext<MyDatabaseContext>(options =>
+    builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("MyDbConnection")));
     builder.Services.AddDistributedMemoryCache();
 }
 else
 {
-    builder.Services.AddDbContext<MyDatabaseContext>(options =>
+    builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING")));
     builder.Services.AddStackExchangeRedisCache(options =>
     {
@@ -25,6 +29,7 @@ builder.Services.AddControllersWithViews();
 
 // Add App Service logging
 builder.Logging.AddAzureWebAppDiagnostics();
+
 
 var app = builder.Build();
 
@@ -45,6 +50,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Todos}/{action=Index}/{id?}");
+    pattern: "{controller=Category}/{action=Index}/{id?}");
 
 app.Run();
