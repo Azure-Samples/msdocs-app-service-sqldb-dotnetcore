@@ -1,7 +1,6 @@
 using DotNetCoreSqlDb.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-
 namespace DotNetCoreSqlDb.Controllers
 {
     public class HomeController : Controller

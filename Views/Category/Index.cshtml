@@ -1,31 +1,70 @@
-﻿@{
+﻿@model Category
+
+@{
     ViewData["Title"] = "Category List";
 }
-<div class="container mt-5">
-    <div class="row category-list-row">
-        <div class="col-10">
-            <h2 class="text-primary">Category List</h2>
+<div id="Category-Main">
+    <div class="container mt-5 d-flex justify-content-between align-items-center">
+        <div class="Cartegory-Title fw-bold">
+            Category List
         </div>
-        <div class="col-2 addbutton-container">
-            <a class="" asp-action="Upsert">
-                <i class="fa-solid fa-plus fa-lg" style="color: #74C0FC;"></i>
+        <div class="Add-Action">
+            <a onclick="OpenModal()">
+                <i style="color: #1383da" class="fa-solid fa-plus Plus-Icon fw-bold"></i>
             </a>
         </div>
     </div>
+    <div class="border p-2 m-2">
+        <table class="table table-bordered table-striped table-active" id="tblData">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Category</td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
-<div class="border p-2 m-2">
-    <table class="table table-bordered table-striped table-active" id="tblData">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Category</td>
-                <td></td>
-            </tr>
-        </tbody>
-    </table>
+
+
+<!-- Modal -->
+<div class="Modal-Container" id="Modal" style="display:none;">
+    <div class="d-flex flex-column border w-75 mt-5 rounded-3" style="height: min-content;">
+        <div class="d-flex justify-content-between m-2" style="border: none;">
+            <h1 class="modal-title fs-5 fw-bold" id="exampleModalLabel">Add Category</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="CloseModal()"></button>
+        </div>
+        <form asp-action="Upsert">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="modal-body" style="padding:.5rem;">
+                <div class="d-flex flex-column justify-content-start align-items-center">
+                    @* <label class="me-2 fs-5">Name</label> *@
+                    <input asp-for="Name" id="Category_Title" class="rounded-3 w-100 p-1" type="text" placeholder="Category name..." />
+                    <div class="d-flex" style="width: -webkit-fill-available;">
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="border: none;">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <input type="submit" value="Add" class="btn btn-primary" />
+            </div>
+        </form>
+
+    </div>
 </div>
+
+@section Scripts
+{
+    <script src="~/js/category.js"></script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+

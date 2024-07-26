@@ -18,35 +18,58 @@ html {
 }
 
 body {
-    margin-bottom: 60px;
     font-family: "Montserrat", sans-serif;
 }
 
-@media (max-width: 576px) {
-    .category-list-row div h2 {
-        font-size: medium;
+/*Common*/
+.Cartegory-Title {
+    color: #1383da;
+}
+
+.Plus-Icon {
+    color: #1383da;
+}
+/*Category*/
+@media (max-width: 550px) {
+    .Cartegory-Title {
+        font-size: 1.25rem;
     }
 
-    .category-list-row .addbutton-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
+    .Plus-Icon {
+        font-size: 1.25rem;
+    }
+}
+
+@media (min-width: 550px) and (max-width: 1600px) {
+    .Cartegory-Title {
+        font-size: 2rem;
+    }
+
+    .Plus-Icon {
+        font-size: 2rem;
     }
 }
 
 
-@media (min-width: 576px) and (max-width: 1400px) {
-    .category-list-row div h2 {
-        font-size: x-large;
-    }
+/*Admin*/
 
-    .category-list-row .addbutton-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+.SideBar {
+    height: 100%;
+    display: none;
+    width: 100%;
+}
 
-        .category-list-row .addbutton-container a {
-            font-size: 1.3em;
-        }
+.Modal-Container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+}
+
+.Modal {
+    margin-top:45%;
+    width: 80%;
+    height: 25%;
+    border: solid;
+    border-radius: 11px;
 }

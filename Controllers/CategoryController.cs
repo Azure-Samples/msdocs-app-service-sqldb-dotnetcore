@@ -1,4 +1,5 @@
-﻿using DotNetCoreSqlDb.Repository;
+﻿using DotNetCoreSqlDb.Models;
+using DotNetCoreSqlDb.Repository;
 using DotNetCoreSqlDb.Repository.IRepository;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,6 +16,17 @@ namespace DotNetCoreSqlDb.Controllers
         public IActionResult Index()
         {
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult Upsert(Category category)
+        {
+            if (category.Id == 0)
+            {
+                _unitOfWork.Category.Add(category);
+                _unitOfWork.Save();
+            }
+            return RedirectToAction(nameof(Index));
         }
 
         #region APIs
