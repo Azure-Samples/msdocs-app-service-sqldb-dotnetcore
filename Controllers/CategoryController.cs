@@ -19,14 +19,18 @@ namespace DotNetCoreSqlDb.Controllers
         }
 
         [HttpPost]
-        public IActionResult Upsert(Category category)
+        public IActionResult Upsert([FromBody] Category category)
         {
             if (category.Id == 0)
             {
                 _unitOfWork.Category.Add(category);
                 _unitOfWork.Save();
+            }else
+            {
+                _unitOfWork.Category.Update(category);
+                _unitOfWork.Save();
             }
-            return RedirectToAction(nameof(Index));
+            return NoContent();
         }
 
         #region APIs
@@ -34,6 +38,20 @@ namespace DotNetCoreSqlDb.Controllers
         public IActionResult GetAll()
         {
             return Json(new { data = _unitOfWork.Category.GetAll() });
+        }
+        [HttpGet]
+        public IActionResult GetCategoryById(int id)
+        {
+            Category category = _unitOfWork.Category.Get(id);
+            if (category == null)
+            { 
+              return NotFound();
+            }
+            else
+            {
+                return Json(new { data = category });
+
+            }
         }
         #endregion
     }

@@ -9,7 +9,7 @@
             Category List
         </div>
         <div class="Add-Action">
-            <a onclick="OpenModal()">
+            <a onclick="OpenModal('add')">
                 <i style="color: #1383da" class="fa-solid fa-plus Plus-Icon fw-bold"></i>
             </a>
         </div>
@@ -37,13 +37,13 @@
 <div class="Modal-Container" id="Modal" style="display:none;">
     <div class="d-flex flex-column border w-75 mt-5 rounded-3" style="height: min-content;">
         <div class="d-flex justify-content-between m-2" style="border: none;">
-            <h1 class="modal-title fs-5 fw-bold" id="exampleModalLabel">Add Category</h1>
+            <h1 class="modal-title fs-5 fw-bold" id="ModalLabel"></h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="CloseModal()"></button>
         </div>
-        <form asp-action="Upsert">
+        <form>
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="modal-body" style="padding:.5rem;">
-                <div class="d-flex flex-column justify-content-start align-items-center">
+                <div class="d-flex flex-column justify-content-start align-items-center" id="Form-Container">
                     @* <label class="me-2 fs-5">Name</label> *@
                     <input asp-for="Name" id="Category_Title" class="rounded-3 w-100 p-1" type="text" placeholder="Category name..." />
                     <div class="d-flex" style="width: -webkit-fill-available;">
@@ -52,8 +52,8 @@
                 </div>
             </div>
             <div class="modal-footer" style="border: none;">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <input type="submit" value="Add" class="btn btn-primary" />
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="CloseModal()">Close</button>
+                <input type="button" value="" class="btn btn-primary" id="SubmitButton" onclick="upsert()"/>
             </div>
         </form>
 

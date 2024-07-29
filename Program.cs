@@ -2,6 +2,7 @@
 using DotNetCoreSqlDb.Data;
 using DotNetCoreSqlDb.Repository.IRepository;
 using DotNetCoreSqlDb.Repository;
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<IUnitOFWork, UnitOfWork>();
@@ -30,6 +31,15 @@ builder.Services.AddControllersWithViews();
 // Add App Service logging
 builder.Logging.AddAzureWebAppDiagnostics();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:5173", "https://bookshop-jvh7-nsdk3t4tq-ritik-bhatias-projects.vercel.app/");
+        });
+});
+
 
 var app = builder.Build();
 
@@ -45,6 +55,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseCors(MyAllowSpecificOrigins);
 
 app.UseAuthorization();
 

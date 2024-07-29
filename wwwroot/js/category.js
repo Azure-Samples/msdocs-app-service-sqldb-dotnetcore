@@ -28,7 +28,7 @@ function LoadDataTable() {
                 render: function (data) {
                     return `
                       <div class="text-center">
-                      <a class="btn btn-success" style="font-size: .9rem;" href="/Admin/Category/Upsert/${data}"><i class="fas fa-edit"></i></a>
+                      <a class="btn btn-success" style="font-size: .9rem;" onclick="OpenModal('edit',${data})"><i class="fas fa-edit"></i></a>
                       <a class="btn btn-danger" style="font-size: .9rem;"  OnClick=Delete("/Admin/Category/Delete/${data}")><i class="fas fa-trash-alt"></i></a>
                       </div>
                       `;

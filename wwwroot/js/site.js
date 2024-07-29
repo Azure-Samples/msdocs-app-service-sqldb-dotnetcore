@@ -3,6 +3,8 @@
 
 // Write your JavaScript code.
 
+//api EndPoint
+
 function openSideBar() {
     $('#main').css('display', 'none');
     $('#menu').css('display', 'none');
@@ -17,7 +19,37 @@ function closeSideBar() {
     $('#sideBar').css('display', 'none');
 }
 
-function OpenModal() {
+//Category Moday
+async function OpenModal(addEdit, id) {
+    if (addEdit == 'add') {
+        document.getElementById('ModalLabel').textContent = 'Add Category';
+        document.getElementById('SubmitButton').value = 'Add';
+    }
+    if (addEdit == 'edit') {
+        document.getElementById('ModalLabel').textContent = 'Edit Category';
+        document.getElementById('SubmitButton').value = 'Update';
+
+        //Get Category By Id
+        $.ajax({
+            url: `/category/getCategoryById/${id}`,
+            type: 'GET',
+            contentType: 'application/json',
+            success: function (response) {
+                document.getElementById('Category_Title').value = response.data.name;
+                const label = document.createElement('label');
+                label.textContent = response.data.id;
+                label.id = 'IdValue';
+                label.style.display = 'none';
+                const container = document.getElementById('Form-Container');
+                container.appendChild(label);
+            },
+            error: function (error) {
+                debugger
+                console.error('Error during upsert:', error);
+            }
+        });
+
+    }
     $('#Category-Main').css('display', 'none');
     $('#Modal').css('display', 'flex');
 }
@@ -27,22 +59,27 @@ function CloseModal() {
     $('#Category-Main').css('display', '');
 }
 
-function upsertPost() {
-    Category_Title
-    var data = {
-        name: "Sample Item",
-    };
-
+function upsert() {
+    id = document.getElementById('IdValue').textContent;
+    name = document.getElementById('Category_Title').value;
+    if (id) {
+        var category = {
+            id: +id,
+            name: name,
+        };
+    }
     $.ajax({
         url: '/category/upsert',
         type: 'POST',
         contentType: 'application/json',
-        data: JSON.stringify(data),
+        data: JSON.stringify(category),
         success: function (response) {
-            console.log('Upsert successful:', response);
+            CloseModal();
+            datatable.ajax.reload();
         },
-        error: function (error) {
-            console.error('Error during upsert:', error);
+        error: function (xhr, status, error) {
+            console.error('Error:', error);
         }
     });
 }
+
