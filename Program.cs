@@ -36,7 +36,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: MyAllowSpecificOrigins,
         policy =>
         {
-            policy.WithOrigins("http://localhost:5173", "https://bookshop-jvh7-nsdk3t4tq-ritik-bhatias-projects.vercel.app/");
+            policy.WithOrigins("http://localhost:5173", "https://bookshop-red.vercel.app");
         });
 });
 
