@@ -31,12 +31,15 @@ builder.Services.AddControllersWithViews();
 // Add App Service logging
 builder.Logging.AddAzureWebAppDiagnostics();
 
+var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
+
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: MyAllowSpecificOrigins,
         policy =>
         {
-            policy.WithOrigins("http://localhost:5173", "https://bookshop-red.vercel.app");
+            policy.WithOrigins(allowedOrigins);
         });
 });
 
@@ -59,8 +62,6 @@ app.UseCors(MyAllowSpecificOrigins);
 
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Category}/{action=Index}/{id?}");
-
+app.MapControllers();
+app.MapGet("/", () => "Welcome to the API");
 app.Run();

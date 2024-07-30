@@ -11,5 +11,16 @@ namespace DotNetCoreSqlDb.Repository
         {
             _context = context;
         }
+
+
+        async Task<Category> ICategoryRepository.GetCategoryById(int id)
+        {
+            var category = await _context.Categories.FindAsync(id);
+            if (category == null)
+            {
+                return category;
+            }
+            return category;
+        }
     }
 }

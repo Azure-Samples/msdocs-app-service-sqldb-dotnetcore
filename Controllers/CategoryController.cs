@@ -2,9 +2,12 @@
 using DotNetCoreSqlDb.Repository;
 using DotNetCoreSqlDb.Repository.IRepository;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DotNetCoreSqlDb.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class CategoryController : Controller
     {
         private readonly IUnitOFWork _unitOfWork;
@@ -12,46 +15,23 @@ namespace DotNetCoreSqlDb.Controllers
         {
             _unitOfWork = unitOfWork;
         }
-
-        public IActionResult Index()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public IActionResult Upsert([FromBody] Category category)
-        {
-            if (category.Id == 0)
-            {
-                _unitOfWork.Category.Add(category);
-                _unitOfWork.Save();
-            }else
-            {
-                _unitOfWork.Category.Update(category);
-                _unitOfWork.Save();
-            }
-            return NoContent();
-        }
-
+     
         #region APIs
         [HttpGet]
         public IActionResult GetAll()
         {
             return Json(new { data = _unitOfWork.Category.GetAll() });
         }
-        [HttpGet]
-        public IActionResult GetCategoryById(int id)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Category>> GetCategoryById(int id)
         {
-            Category category = _unitOfWork.Category.Get(id);
-            if (category == null)
-            { 
-              return NotFound();
-            }
-            else
+            var category = new Category();
+            category = await _unitOfWork.Category.GetCategoryById(id);
+            if(category == null)
             {
-                return Json(new { data = category });
-
+                return NotFound();
             }
+            return category;
         }
         #endregion
     }
