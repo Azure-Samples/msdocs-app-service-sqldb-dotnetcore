@@ -12,11 +12,11 @@ namespace DotNetCoreSqlDb.Controllers
     public class TodosController : Controller
     {
         private readonly ILogger<TodosController> _logger;
-        private readonly MyDatabaseContext _context;
+        private readonly ApplicationDbContext _context;
         private readonly IDistributedCache _cache;
         private readonly string _TodoItemsCacheKey = "TodoItemsList";
 
-        public TodosController(MyDatabaseContext context, IDistributedCache cache, ILogger<TodosController> logger)
+        public TodosController(ApplicationDbContext context, IDistributedCache cache, ILogger<TodosController> logger)
         {
             _context = context;
             _cache = cache;
