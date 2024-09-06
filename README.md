@@ -77,6 +77,12 @@ Because the Linux .NET container in App Service doesn't come with the .NET SDK, 
 - In the [.csproj](DotNretCoreSqlDb.csproj) file, include the generated *migrationsbundle* file. During the `azd package` stage, *migrationsbundle* will be added to the deploy package.
 - In [infra/resources.bicep](infra/resources.bicep), add the `appCommandLine` property to the web app to run the uploaded *migrationsbundle*.
 
+## How does the AZD template configure passwords?
+
+Two types of secrets are involved: the SQL Database administrator password and the access key for Cache for Redis, and they are both present in the respective connection strings. The [AZD template](infra/resources.bicep) in this repo manages both connection strings in a key vault that's secured behind a private endpoint.
+
+To simplify the scenario, the AZD template generates a new database password each time you run `azd provision` or `azd up`, and the database connection string in the key vault is modified too. If you want to fully utilize `secretOrRandomPassword` in the [parameter file](infra/main.parameters.json) by committing the automatically generated password to the key vault the first time and reading it on subsequent `azd` commands, you must relax the networking restriction of the key vault to allow traffic from public networks. For more information, see [What is the behavior of the `secretOrRandomPassword` function?](https://learn.microsoft.com/azure/developer/azure-developer-cli/faq#what-is-the-behavior-of-the--secretorrandompassword--function).
+
 ## Getting help
 
 If you're working with this project and running into issues, please post in [Issues](/issues).

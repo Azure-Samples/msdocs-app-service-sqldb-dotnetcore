@@ -2,6 +2,8 @@ param name string
 param location string
 param resourceToken string
 param principalId string
+@secure()
+param databasePassword string
 
 var appName = '${name}-${resourceToken}'
 
@@ -211,7 +213,8 @@ resource privateDnsZoneCache 'Microsoft.Network/privateDnsZones@2020-06-01' = {
   }  
 }
 
-// The Key Vault is used to manage Redis secrets.
+// The Key Vault is used to manage SQL database and redis secrets.
+// Current user has the admin permissions to configure key vault secrets, but by default doesn't have the permissions to read them.
 resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' = {
   name: '${take(replace(appName, '-', ''), 17)}-vault'
   location: location
@@ -219,26 +222,38 @@ resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' = {
     enableRbacAuthorization: true
     tenantId: subscription().tenantId
     sku: { family: 'A', name: 'standard' }
-    publicNetworkAccess: 'Disabled'
+    // Only allow requests from the private endpoint in the VNET.
+    publicNetworkAccess: 'Disabled' // To see the secret in the portal, change to 'Enabled' 
     networkAcls: {
-      defaultAction: 'Deny'
-      bypass: 'AzureServices'
-      ipRules: []
-      virtualNetworkRules: []
+      defaultAction: 'Deny' // To see the secret in the portal, change to 'Allow' 
+      bypass: 'None' 
     }
   }
 }
 
+// Grant the current user with key vault secret user role permissions over the key vault. This lets you inspect the secrets, such as in the portal
+// If you remove this section, you can't read the key vault secrets, but the app still has access with its managed identity.
+resource keyVaultSecretUserRoleRoleDefinition 'Microsoft.Authorization/roleDefinitions@2018-01-01-preview' existing = {
+  scope: subscription()
+  name: '4633458b-17de-408a-b874-0445c86b69e6' // The built-in Key Vault Secret User role
+}
+resource keyVaultSecretUserRoleAssignment 'Microsoft.Authorization/roleAssignments@2020-08-01-preview' = {
+  scope: keyVault
+  name: guid(resourceGroup().id, principalId, keyVaultSecretUserRoleRoleDefinition.id)
+  properties: {
+    roleDefinitionId: keyVaultSecretUserRoleRoleDefinition.id
+    principalId: principalId
+    principalType: 'User'
+  }
+}
+
 // The SQL Database server is configured to be the minimum pricing tier
-// It also uses Microsoft Entra authentication with the current user as the administrator
 resource dbserver 'Microsoft.Sql/servers@2023-05-01-preview' = {
   location: location
   name: '${appName}-server'
   properties: {
-    administrators: {
-      login: '${appName}-server-admin'
-      sid: principalId
-    }
+    administratorLogin: '${appName}-server-admin'
+    administratorLoginPassword: databasePassword
     publicNetworkAccess: 'Disabled'
     restrictOutboundNetworkAccess: 'Disabled'
   }
@@ -319,7 +334,7 @@ resource web 'Microsoft.Web/sites@2022-09-01' = {
     properties: {
       applicationLogs: {
         fileSystem: {
-          level: 'Verbose'
+          level: 'Information'
         }
       }
       detailedErrorMessages: {
@@ -356,7 +371,7 @@ resource vaultConnector 'Microsoft.ServiceLinker/linkers@2024-04-01' = {
   scope: web
   name: 'vaultConnector'
   properties: {
-    clientType: 'springBoot'
+    clientType: 'dotnet'
     targetService: {
       type: 'AzureResource'
       id: keyVault.id
@@ -383,7 +398,15 @@ resource dbConnector 'Microsoft.ServiceLinker/linkers@2024-04-01' = {
       id: dbserver::db.id
     }
     authInfo: {
-      authType: 'systemAssignedIdentity'
+      authType: 'secret'
+      name: '${appName}-server-admin'
+      secretInfo: {
+        secretType: 'rawValue'
+        value: databasePassword
+      }
+    }
+    secretStore: {
+      keyVaultId: keyVault.id // Configure secrets as key vault references. No secret is exposed in App Service.
     }
     clientType: 'dotnet-connectionString' // Generate a .NET connection string. For app setting, use 'dotnet' instead
     vNetSolution: {
@@ -403,7 +426,7 @@ resource cacheConnector 'Microsoft.ServiceLinker/linkers@2024-04-01' = {
       id:  resourceId('Microsoft.Cache/Redis/Databases', redisCache.name, '0')
     }
     authInfo: {
-      authType: 'accessKey' // Configure secrets as Key Vault references. No secret is exposed in App Service.
+      authType: 'accessKey' // Configure secrets as key vault references. No secret is exposed in App Service.
     }
     secretStore: {
       keyVaultId: keyVault.id

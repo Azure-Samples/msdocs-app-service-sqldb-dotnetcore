@@ -9,6 +9,10 @@ param name string
 @description('Primary location for all resources')
 param location string
 
+@secure()
+@description('SQL Server administrator password')
+param databasePassword string = ''
+
 param principalId string = ''
 
 var resourceToken = toLower(uniqueString(subscription().id, name, location))
@@ -26,6 +30,7 @@ module resources 'resources.bicep' = {
     name: name
     location: location
     resourceToken: resourceToken
+    databasePassword: databasePassword
     principalId: principalId
   }
 }
