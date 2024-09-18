@@ -22,6 +22,37 @@ namespace DotNetCoreSqlDb.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("DotNetCoreSqlDb.Models.Degenerate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BetsPlaced")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BetsWon")
+                        .HasColumnType("int");
+
+                    b.Property<double>("CashWallet")
+                        .HasColumnType("float");
+
+                    b.Property<double>("TotalWagesPlaced")
+                        .HasColumnType("float");
+
+                    b.Property<double>("TotalWagesWon")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Username")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Degenerate");
+                });
+
             modelBuilder.Entity("DotNetCoreSqlDb.Models.Todo", b =>
                 {
                     b.Property<int>("ID")
@@ -39,6 +70,58 @@ namespace DotNetCoreSqlDb.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("Todo");
+                });
+
+            modelBuilder.Entity("DotNetCoreSqlDb.Models.WagerItems.WagerItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("BetType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("MatchId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Odds")
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("Outcome")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("SportType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("TimeOfBet")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WagerJuice")
+                        .HasColumnType("int");
+
+                    b.Property<string>("WagerTeamA")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("WagerTeamB")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("WagerValue")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("WagerItem");
                 });
 #pragma warning restore 612, 618
         }
