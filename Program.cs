@@ -26,6 +26,14 @@ builder.Services.AddControllersWithViews();
 // Add App Service logging
 builder.Logging.AddAzureWebAppDiagnostics();
 
+// Register services
+builder.Services.AddSingleton<AzureStorageService>(provider =>
+{
+    var configuration = provider.GetRequiredService<IConfiguration>();
+    string connectionString = configuration["DefaultEndpointsProtocol=https;AccountName=acewwwroot;AccountKey=rANrk8t68qtk5ooKS4T+gRHGYHGdpFZRGUEz+iEWdVL5l3dwGgo8tAtSsxWPTGLBYqg9/Iz1g3L/+AStRxhgRw==;BlobEndpoint=https://acewwwroot.blob.core.windows.net/;FileEndpoint=https://acewwwroot.file.core.windows.net/;TableEndpoint=https://acewwwroot.table.core.windows.net/;QueueEndpoint=https://acewwwroot.queue.core.windows.net/"];
+    return new AzureStorageService(connectionString);
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -36,16 +44,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-public void ConfigureServices(IServiceCollection services)
-{
-    services.AddControllersWithViews();
-    services.AddSingleton<AzureStorageService>(provider =>
-    {
-        var configuration = provider.GetRequiredService<IConfiguration>();
-        string connectionString = configuration["AzureStorage:ConnectionString"];
-        return new AzureStorageService(connectionString);
-    });
-}
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
