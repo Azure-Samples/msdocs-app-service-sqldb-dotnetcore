@@ -36,6 +36,16 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddControllersWithViews();
+    services.AddSingleton<AzureStorageService>(provider =>
+    {
+        var configuration = provider.GetRequiredService<IConfiguration>();
+        string connectionString = configuration["AzureStorage:ConnectionString"];
+        return new AzureStorageService(connectionString);
+    });
+}
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 

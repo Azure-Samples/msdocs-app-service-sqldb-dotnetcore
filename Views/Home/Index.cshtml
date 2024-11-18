@@ -9,7 +9,7 @@
     <style>
 
             body{
-                background-image: url("/images/background.jpg");
+                background-image: <a asp-controller="File" asp-action="Download" asp-route-containerName="images" asp-route-fileName="background.jpg">Download File</a>;
                 background-size: cover;
                 background-position: center;
             }
