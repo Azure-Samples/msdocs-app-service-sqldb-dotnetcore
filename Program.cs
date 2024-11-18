@@ -30,9 +30,12 @@ builder.Logging.AddAzureWebAppDiagnostics();
 builder.Services.AddSingleton<AzureStorageService>(provider =>
 {
     var configuration = provider.GetRequiredService<IConfiguration>();
-    string connectionString = configuration["DefaultEndpointsProtocol=https;AccountName=acewwwroot;AccountKey=rANrk8t68qtk5ooKS4T+gRHGYHGdpFZRGUEz+iEWdVL5l3dwGgo8tAtSsxWPTGLBYqg9/Iz1g3L/+AStRxhgRw==;BlobEndpoint=https://acewwwroot.blob.core.windows.net/;FileEndpoint=https://acewwwroot.file.core.windows.net/;TableEndpoint=https://acewwwroot.table.core.windows.net/;QueueEndpoint=https://acewwwroot.queue.core.windows.net/"];
+    string connectionString = configuration["AzureStorage:ConnectionString"];
     return new AzureStorageService(connectionString);
 });
+
+// Add other services as needed
+builder.Services.AddControllersWithViews(); // This is for MVC controllers
 
 var app = builder.Build();
 
