@@ -1,9 +1,4 @@
-﻿public IActionResult Index()
-{
-    string imageUrl = GetBlobUrl("images", "background.jpg");
-    ViewData["BackgroundImageUrl"] = imageUrl;
-    return View();
-}
+﻿
 @{
     ViewData["Title"] = "Home Page";
     var backgroundImageUrl = ViewData["BackgroundImageUrl"] as string; // Retrieve the URL passed from the controller
