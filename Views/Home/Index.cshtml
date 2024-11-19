@@ -1,5 +1,12 @@
-﻿@{
+﻿public IActionResult Index()
+{
+    string imageUrl = GetBlobUrl("images", "background.jpg");
+    ViewData["BackgroundImageUrl"] = imageUrl;
+    return View();
+}
+@{
     ViewData["Title"] = "Home Page";
+    var backgroundImageUrl = ViewData["BackgroundImageUrl"] as string; // Retrieve the URL passed from the controller
 }
 
 <!DOCTYPE html>
@@ -7,17 +14,15 @@
 <head>
     <title>@ViewData["Title"]</title>
     <style>
-
-            body{
-                background-image: url("https://acewwwroot.blob.core.windows.net/images/background.jpg");
-                background-size: cover;
-                background-position: center;
-            }
+        body {
+            background-image: url('@backgroundImageUrl'); /* Use the URL passed from the controller */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
     </style>
 </head>
 <body>
-
-
 
 </body>
 </html>
