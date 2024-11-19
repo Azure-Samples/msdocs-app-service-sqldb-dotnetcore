@@ -30,7 +30,12 @@ builder.Logging.AddAzureWebAppDiagnostics();
 builder.Services.AddSingleton<AzureStorageService>(provider =>
 {
     var configuration = provider.GetRequiredService<IConfiguration>();
-    string connectionString = configuration["AzureStorage:ConnectionString"];
+   
+    string? connectionString= configuration["AzureStorage:ConnectionString"];
+    if(string.IsNullOrEmpty(connectionString))
+    {
+        throw new  Exception("kupa");
+    }
     return new AzureStorageService(connectionString);
 });
 
