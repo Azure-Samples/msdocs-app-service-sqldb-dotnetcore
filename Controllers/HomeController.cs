@@ -39,24 +39,35 @@ namespace DotNetCoreSqlDb.Controllers
     }
 
     // Service to handle Azure Blob Storage interactions
-    public class AzureStorageService
+public class AzureStorageService
+{
+    private readonly string _connectionString;
+    private readonly ILogger<AzureStorageService> _logger;
+
+    public AzureStorageService(IConfiguration configuration, ILogger<AzureStorageService> logger)
     {
-        private readonly string _connectionString;
+        _connectionString = configuration.GetConnectionString("AzureStorage")
+            ?? throw new ArgumentNullException(nameof(_connectionString), "Azure Storage connection string is not configured.");
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    }
 
-        public AzureStorageService(IConfiguration configuration)
-        {
-            // Ensure _connectionString is initialized
-            _connectionString = configuration.GetConnectionString("AzureStorage")
-                ?? throw new ArgumentNullException(nameof(_connectionString), "Azure Storage connection string is not configured.");
-        }
+public string GetBlobUrl(string containerName, string blobName)
+{
+    try
+    {
+        var blobServiceClient = new BlobServiceClient(_connectionString);
+        var blobContainerClient = blobServiceClient.GetBlobContainerClient(containerName);
+        var blobClient = blobContainerClient.GetBlobClient(blobName);
 
-        public string GetBlobUrl(string containerName, string blobName)
-        {
-            var blobServiceClient = new BlobServiceClient(_connectionString);
-            var blobContainerClient = blobServiceClient.GetBlobContainerClient(containerName);
-            var blobClient = blobContainerClient.GetBlobClient(blobName);
+        return blobClient.Uri.ToString();
+    }
+    catch (Exception ex)
+    {
+        // Log the error for troubleshooting
+        _logger.LogError($"Error retrieving blob URL: {ex.Message}");
+        throw new InvalidOperationException("Error retrieving blob URL.", ex);
+    }
+}
 
-            return blobClient.Uri.ToString();
-        }
     }
 }

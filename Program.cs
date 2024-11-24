@@ -27,19 +27,24 @@ builder.Services.AddControllersWithViews();
 // Add App Service logging
 builder.Logging.AddAzureWebAppDiagnostics();
 
-// Register services
 builder.Services.AddSingleton<AzureStorageService>(provider =>
 {
+    // Retrieve IConfiguration from the DI container
     var configuration = provider.GetRequiredService<IConfiguration>();
-    string? connectionString = configuration.GetConnectionString("AzureStorage");
-
+    
+    // Get the connection string from IConfiguration
+    var connectionString = configuration.GetConnectionString("AzureStorage");
+    
+    // Check if connection string is null or empty
     if (string.IsNullOrEmpty(connectionString))
     {
-        throw new Exception("Azure Storage connection string is not configured.");
+        throw new Exception("Azure Storage connection string is not configured properly.");
     }
 
-    return new AzureStorageService(connectionString);
+    // Create and return the AzureStorageService with the connection string
+    return new AzureStorageService(configuration);  // Passing IConfiguration as required by the constructor
 });
+
 
 // Add other services as needed
 builder.Services.AddControllersWithViews(); // This is for MVC controllers
