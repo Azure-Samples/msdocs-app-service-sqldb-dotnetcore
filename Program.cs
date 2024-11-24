@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using DotNetCoreSqlDb.Data;
+using Microsoft.Extensions.DependencyInjection;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add database context and cache
@@ -30,12 +31,13 @@ builder.Logging.AddAzureWebAppDiagnostics();
 builder.Services.AddSingleton<AzureStorageService>(provider =>
 {
     var configuration = provider.GetRequiredService<IConfiguration>();
-   
-    string? connectionString= configuration["AzureStorage:ConnectionString"];
-    if(string.IsNullOrEmpty(connectionString))
+    string? connectionString = configuration.GetConnectionString("AzureStorage");
+
+    if (string.IsNullOrEmpty(connectionString))
     {
-        throw new  Exception("kupa");
+        throw new Exception("Azure Storage connection string is not configured.");
     }
+
     return new AzureStorageService(connectionString);
 });
 

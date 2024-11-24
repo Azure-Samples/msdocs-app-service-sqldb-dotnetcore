@@ -1,16 +1,10 @@
-﻿
-@{
-    ViewData["Title"] = "Home Page";
-    var backgroundImageUrl = ViewData["BackgroundImageUrl"] as string; // Retrieve the URL passed from the controller
-}
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <title>@ViewData["Title"]</title>
     <style>
         body {
-            background-image: url('@backgroundImageUrl'); /* Use the URL passed from the controller */
+            background-image: url("@ViewData["BackgroundUrl"]");
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
