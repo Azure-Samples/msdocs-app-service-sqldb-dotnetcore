@@ -18,7 +18,7 @@ namespace DotNetCoreSqlDb.Controllers
         public IActionResult Index()
         {
             var backgroundUrl = _azureStorageService.GetBlobUrl("background-images", "background.jpg");
-            ViewData["BackgroundUrl"] = backgroundUrl;
+            ViewData["BackgroundUrl"] = "https://acewwwroot.blob.core.windows.net/background-images/background.jpg?sv=2022-11-02&ss=bfqt&srt=sco&sp=rwdlacupiytfx&se=2025-06-30T22:51:04Z&st=2024-11-17T15:51:04Z&spr=https&sig=i0YOLy6F46uqF4dO0plDdw8V590gGhumaudcZiFjrg8%3D";
 
             return View();
         }
