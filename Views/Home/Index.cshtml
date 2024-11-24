@@ -4,7 +4,7 @@
     <title>@ViewData["Title"]</title>
     <style>
         body {
-            background-image: url("@ViewData["BackgroundUrl"]");
+            background-image: url(@ViewData["BackgroundUrl"]);
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -12,6 +12,8 @@
     </style>
 </head>
 <body>
-
+    <div>
+        Debug: @ViewData["BackgroundUrl"]
+    </div>
 </body>
 </html>
