@@ -17,9 +17,14 @@ namespace DotNetCoreSqlDb.Controllers
 
         public IActionResult Index()
         {
-            var backgroundUrl = _azureStorageService.GetBlobUrl("background-images", "background.jpg");
-            ViewData["BackgroundUrl"] = "acewwwroot.blob.core.windows.net/background-images/background.jpg?sv=2022-11-02&ss=bfqt&srt=sco&sp=rwdlacupiytfx&se=2025-06-30T22:51:04Z&st=2024-11-17T15:51:04Z&spr=https&sig=i0YOLy6F46uqF4dO0plDdw8V590gGhumaudcZiFjrg8%3D";
+            string storageAccountName = "acewwwroot";
+            string storageAccountKey = "rANrk8t68qtk5ooKS4T+gRHGYHGdpFZRGUEz+iEWdVL5l3dwGgo8tAtSsxWPTGLBYqg9/Iz1g3L/+AStRxhgRw=="; // Get this securely from configuration
+            string blobUrl = "https://acewwwroot.blob.core.windows.net/background-images/background.jpg";
 
+    // Generate SAS token URL
+            string sasUrl = _azureStorageService.GenerateBlobSasToken(blobUrl, storageAccountName, storageAccountKey);
+
+            ViewData["BackgroundUrl"] = sasUrl;
             return View();
         }
 
