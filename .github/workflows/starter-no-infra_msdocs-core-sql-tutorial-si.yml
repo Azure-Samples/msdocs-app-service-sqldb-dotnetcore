@@ -30,7 +30,7 @@ jobs:
         run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
       - name: Install dotnet ef
-        run: dotnet tool install --global dotnet-ef --versionj 8.*
+        run: dotnet tool install -g dotnet-ef --version 8.*
 
       - name: Create migrations bundle
         run: dotnet ef migrations bundle --runtime linux-x64 -o ${{env.DOTNET_ROOT}}/myapp/migrationsbundle
