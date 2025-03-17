@@ -1,34 +1,42 @@
-name: Deploy ASP.NET Core app to Azure Web App
+name: Deploy to Azure Web App
 
 on:
   push:
     branches:
-      - msdocs-app-service-sqldb-dotnetcore
+      - main
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v2
+    - name: Set up .NET
+      uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '6.0'
+        dotnet-version: '7.0.x' # Use the version your app requires
 
-    - name: Build with dotnet
-      run: dotnet build --configuration Release
+    - name: Restore dependencies
+      run: dotnet restore
 
-    - name: Publish with dotnet
-      run: dotnet publish --configuration Release --output ./publish
+    - name: Build project
+      run: dotnet build --configuration Release --no-restore
 
+    - name: Publish project
+      run: dotnet publish -c Release -o ${{ github.workspace }}/publish
+
+    - name: Login to Azure Web App
+      uses: azure/login@v2
+      with:
+       client-id: ${{ 26379a30-523d-499b-ac56-582060bd8e56 }}
+       tenant-id: ${{ 81fcffd2-b4fc-4511-812b-a48b02631e81 }}
+       subscription-id: ${{ b7126c40-a209-4e7f-af20-a04162681c4c }}
+      
     - name: Deploy to Azure Web App
+      id: deploy-to-webapp
       uses: azure/webapps-deploy@v2
       with:
         app-name: cloud-apps01
-        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-        package: ./publish
-
- 
+        package: ${{ github.workspace }}/publish
