@@ -5,8 +5,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add database context and cache
 if(builder.Environment.IsDevelopment())
 {
+    /* just checking the same sql until we can figure out how to get local SSMS with dev */
     builder.Services.AddDbContext<MyDatabaseContext>(options =>
-        options.UseSqlServer(builder.Configuration.GetConnectionString("MyDbConnection")));
+        options.UseSqlServer(builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING")));
     builder.Services.AddDistributedMemoryCache();
 }
 else
@@ -16,7 +17,7 @@ else
     builder.Services.AddStackExchangeRedisCache(options =>
     {
     options.Configuration = builder.Configuration["AZURE_REDIS_CONNECTIONSTRING"];
-    options.InstanceName = "SampleInstance";
+    options.InstanceName = "msdocs-core-sql-bkd";
     });
 }
 
