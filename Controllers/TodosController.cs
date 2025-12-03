@@ -5,6 +5,8 @@ using DotNetCoreSqlDb.Models;
 using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
 using System.Text;
+using Microsoft.AspNetCore.Http;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace DotNetCoreSqlDb.Controllers
 {
@@ -15,6 +17,85 @@ namespace DotNetCoreSqlDb.Controllers
         private readonly MyDatabaseContext _context;
         private readonly IDistributedCache _cache;
         private readonly string _TodoItemsCacheKey = "TodoItemsList";
+
+            // GET: api/todos
+        [HttpGet("api/todos")]
+        [SwaggerOperation(Summary = "Gets all Todo items", OperationId = "GetTodos")]
+        [ProducesResponseType(typeof(IEnumerable<Todo>), 200)]
+        public async Task<ActionResult<IEnumerable<Todo>>> GetTodos()
+        {
+            return await _context.Todo.ToListAsync();
+        }
+
+        // GET: api/todos/5
+        [HttpGet("api/todos/{id}")]
+        [SwaggerOperation(Summary = "Gets a Todo item by ID", OperationId = "GetTodoById")]
+        [ProducesResponseType(typeof(Todo), 200)]
+        [ProducesResponseType(404)]
+        public async Task<ActionResult<Todo>> GetTodo(int id)
+        {
+            var todo = await _context.Todo.FindAsync(id);
+
+            if (todo == null)
+            {
+                return NotFound();
+            }
+
+            return todo;
+        }
+
+
+    // POST: api/todos
+    [HttpPost("api/todos")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [SwaggerOperation(Summary = "Creates a new todo item.", Description = "Creates a new todo item and returns it.", OperationId = "CreateTodo")]
+    public async Task<IActionResult> CreateTodo([FromBody] Todo todo)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        _context.Add(todo);
+        await _context.SaveChangesAsync();
+        return CreatedAtAction(nameof(GetTodo), new { id = todo.ID }, todo);
+    }
+
+    // PUT: api/todos/{id}
+    [HttpPut("api/todos/{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [SwaggerOperation(Summary = "Updates a todo item.", Description = "Updates an existing todo item by ID.", OperationId = "UpdateTodo")]
+    public async Task<IActionResult> UpdateTodo(int id, [FromBody] Todo todo)
+    {
+        // Use the id from the URL fragment only, ignore mismatching check
+        if (!TodoExists(id))
+        {
+            return NotFound();
+        }
+        todo.ID = id;
+        _context.Entry(todo).State = EntityState.Modified;
+        await _context.SaveChangesAsync();
+        return NoContent();
+    }
+
+    // DELETE: api/todos/{id}
+    [HttpDelete("api/todos/{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [SwaggerOperation(Summary = "Deletes a todo item.", Description = "Deletes a todo item by ID.", OperationId = "DeleteTodo")]
+    public async Task<IActionResult> DeleteTodo(int id)
+    {
+        var todo = await _context.Todo.FindAsync(id);
+        if (todo == null)
+        {
+            return NotFound();
+        }
+        _context.Todo.Remove(todo);
+        await _context.SaveChangesAsync();
+        return NoContent();
+    }
 
         public TodosController(MyDatabaseContext context, IDistributedCache cache, ILogger<TodosController> logger)
         {

@@ -27,7 +27,20 @@ builder.Services.AddControllersWithViews();
 // Add App Service logging
 builder.Logging.AddAzureWebAppDiagnostics();
 
+builder.Services.AddSwaggerGen(c =>
+{
+    c.EnableAnnotations();
+    var websiteHostname = Environment.GetEnvironmentVariable("WEBSITE_HOSTNAME");
+    if (!string.IsNullOrEmpty(websiteHostname))
+    {
+        c.AddServer(new Microsoft.OpenApi.Models.OpenApiServer { Url = $"https://{websiteHostname}" });
+    }
+});
+
 var app = builder.Build();
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
