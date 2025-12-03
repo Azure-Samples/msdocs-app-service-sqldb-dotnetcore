@@ -15,7 +15,7 @@ hooks:
   prepackage:
     posix:
       shell: sh
-      run: dotnet ef migrations bundle --runtime linux-x64 --force -o migrationsbundle
+      run: dotnet ef migrations bundle --target-runtime linux-x64 --force -o migrationsbundle
       interactive: true
       continueOnError: true
   # The postpackage hook is used to remove the migrationsbundle file after deploy package is created.
