@@ -26,12 +26,6 @@ jobs:
       - name: Build with dotnet
         run: dotnet build --configuration Release
 
-      - name: Install dotnet ef
-        run: dotnet tool install -g dotnet-ef
-
-      - name: Create migrations bundle
-        run: dotnet ef migrations bundle -o ${{env.DOTNET_ROOT}}/myapp/migrations-bundle
-
       - name: dotnet publish
         run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
