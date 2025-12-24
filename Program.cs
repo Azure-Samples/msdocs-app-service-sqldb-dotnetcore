@@ -26,18 +26,14 @@ else
 
     if (!string.IsNullOrWhiteSpace(redisConnectionString))
 {
-    builder.Services.AddStackExchangeRedisCache(options =>
-    {
-        options.Configuration = redisConnectionString;
-        options.InstanceName = "SampleInstance";
-    });
-}
+
 
     builder.Services.AddStackExchangeRedisCache(options =>
     {
         options.Configuration = redisConnectionString;
         options.InstanceName = "SampleInstance";
     });
+}
 }
 
 // Add services to the container.
