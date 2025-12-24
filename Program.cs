@@ -20,8 +20,18 @@ else
         options.UseSqlServer(sqlConnectionString));
 
     // Redis – use AZURE_REDIS_CONNECTIONSTRING
-    var redisConnectionString =
-        builder.Configuration["AZURE_REDIS_CONNECTIONSTRING"];
+   var redisConnectionString =
+    builder.Configuration.GetConnectionString("AZURE_REDIS_CONNECTIONSTRING")
+    ?? builder.Configuration["AZURE_REDIS_CONNECTIONSTRING"];
+
+    if (!string.IsNullOrWhiteSpace(redisConnectionString))
+{
+    builder.Services.AddStackExchangeRedisCache(options =>
+    {
+        options.Configuration = redisConnectionString;
+        options.InstanceName = "SampleInstance";
+    });
+}
 
     builder.Services.AddStackExchangeRedisCache(options =>
     {
