@@ -27,21 +27,43 @@ namespace DotNetCoreSqlDb.Controllers
         // The cache logic is added with the help of GitHub Copilot
         public async Task<IActionResult> Index()
         {
-            var todoItems = await _cache.GetAsync(_TodoItemsCacheKey);
-            if (todoItems != null)
-            {
-                _logger.LogInformation("Data from cache.");
-                var todoList = JsonConvert.DeserializeObject<List<Todo>>(Encoding.UTF8.GetString(todoItems));
-                return View(todoList);
-            }
-            else
-            {
-                _logger.LogInformation("Data from database.");
-                var todoList = await _context.Todo.ToListAsync();
-                var serializedTodoList = JsonConvert.SerializeObject(todoList);
-                await _cache.SetAsync(_TodoItemsCacheKey, Encoding.UTF8.GetBytes(serializedTodoList));
-                return View(todoList);
-            }
+            List<Todo> todoList;
+
+    try
+    {
+        var cached = await _cache.GetAsync(_TodoItemsCacheKey);
+        if (cached != null)
+        {
+            _logger.LogInformation("Data from cache.");
+            todoList = JsonConvert.DeserializeObject<List<Todo>>(
+                Encoding.UTF8.GetString(cached)
+            )!;
+            return View(todoList);
+        }
+    }
+    catch (Exception ex)
+    {
+        _logger.LogWarning(ex, "Redis unavailable, falling back to DB");
+    }
+
+    // Fallback → SQL
+    _logger.LogInformation("Data from database.");
+    todoList = await _context.Todo.ToListAsync();
+
+    try
+    {
+        var serialized = JsonConvert.SerializeObject(todoList);
+        await _cache.SetAsync(
+            _TodoItemsCacheKey,
+            Encoding.UTF8.GetBytes(serialized)
+        );
+    }
+    catch (Exception ex)
+    {
+        _logger.LogWarning(ex, "Failed to write to Redis");
+    }
+
+    return View(todoList);
         }
 
         // GET: Todos/Details/5
