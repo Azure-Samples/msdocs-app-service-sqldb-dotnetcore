@@ -27,24 +27,19 @@ else
         ?? builder.Configuration["AZURE_REDIS_CONNECTIONSTRING"];
 
     if (!string.IsNullOrWhiteSpace(redisConnectionString))
+  if (!string.IsNullOrWhiteSpace(redisConnectionString))
+{
+    builder.Services.AddStackExchangeRedisCache(options =>
     {
-        builder.Services.AddStackExchangeRedisCache(options =>
-        {
-            options.ConfigurationOptions = new ConfigurationOptions
-            {
-                EndPoints = { redisConnectionString },
-                AbortOnConnectFail = false,
-                ConnectTimeout = 5000,
-                SyncTimeout = 5000
-            };
+        options.Configuration = redisConnectionString;
+        options.InstanceName = "SampleInstance";
+    });
+}
+else
+{
+    builder.Services.AddDistributedMemoryCache();
+}
 
-            options.InstanceName = "SampleInstance";
-        });
-    }
-    else
-    {
-        builder.Services.AddDistributedMemoryCache();
-    }
 }
 
 // MVC
