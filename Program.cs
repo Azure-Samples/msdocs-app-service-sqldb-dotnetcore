@@ -33,9 +33,10 @@ else
      options.ConfigurationOptions =
          StackExchange.Redis.ConfigurationOptions.Parse(redisConnectionString);
 
-     options.ConfigurationOptions.ConnectTimeout = 200;
-     options.ConfigurationOptions.SyncTimeout = 200;
+     options.ConfigurationOptions.ConnectTimeout = 3000;
+     options.ConfigurationOptions.SyncTimeout = 3000;
      options.ConfigurationOptions.AbortOnConnectFail = false;
+
 
      options.InstanceName = "SampleInstance";
  });
