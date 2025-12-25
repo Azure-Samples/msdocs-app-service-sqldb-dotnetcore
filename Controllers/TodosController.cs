@@ -29,74 +29,79 @@ namespace DotNetCoreSqlDb.Controllers
         {
             List<Todo> todoList;
 
-    try
-    {
-        var cached = await _cache.GetAsync(_TodoItemsCacheKey);
-        if (cached != null)
-        {
-            _logger.LogInformation("Data from cache.");
-            todoList = JsonConvert.DeserializeObject<List<Todo>>(
-                Encoding.UTF8.GetString(cached)
-            )!;
+            try
+            {
+                var cached = await _cache.GetAsync(_TodoItemsCacheKey);
+                if (cached != null)
+                {
+                    _logger.LogInformation("Data from cache.");
+                    todoList = JsonConvert.DeserializeObject<List<Todo>>(
+                        Encoding.UTF8.GetString(cached)
+                    )!;
+                    return View(todoList);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Redis unavailable, falling back to DB");
+            }
+
+            // Fallback → SQL
+            _logger.LogInformation("Data from database.");
+            todoList = await _context.Todo.ToListAsync();
+
+            try
+            {
+                var serialized = JsonConvert.SerializeObject(todoList);
+                await _cache.SetAsync(
+                    _TodoItemsCacheKey,
+                    Encoding.UTF8.GetBytes(serialized)
+                );
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Failed to write to Redis");
+            }
+
             return View(todoList);
-        }
-    }
-    catch (Exception ex)
-    {
-        _logger.LogWarning(ex, "Redis unavailable, falling back to DB");
-    }
-
-    // Fallback → SQL
-    _logger.LogInformation("Data from database.");
-    todoList = await _context.Todo.ToListAsync();
-
-    try
-    {
-        var serialized = JsonConvert.SerializeObject(todoList);
-        await _cache.SetAsync(
-            _TodoItemsCacheKey,
-            Encoding.UTF8.GetBytes(serialized)
-        );
-    }
-    catch (Exception ex)
-    {
-        _logger.LogWarning(ex, "Failed to write to Redis");
-    }
-
-    return View(todoList);
         }
 
         // GET: Todos/Details/5
-        // The cache logic is added with the help of GitHub Copilot
+
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
+
+            Todo? todoItem = null;
+
+            try
+            {
+                var cached = await _cache.GetAsync(GetTodoItemCacheKey(id));
+                if (cached != null)
+                {
+                    _logger.LogInformation("Data from cache.");
+                    todoItem = JsonConvert.DeserializeObject<Todo>(
+                        Encoding.UTF8.GetString(cached));
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Redis unavailable, falling back to DB");
             }
 
-            var todo = await _cache.GetAsync(GetTodoItemCacheKey(id));
-            if (todo != null)
-            {
-                _logger.LogInformation("Data from cache.");
-                var todoItem = JsonConvert.DeserializeObject<Todo>(Encoding.UTF8.GetString(todo));
-                return View(todoItem);
-            }
-            else
+            if (todoItem == null)
             {
                 _logger.LogInformation("Data from database.");
-                var todoItem = await _context.Todo
-                    .FirstOrDefaultAsync(m => m.ID == id);
-                if (todoItem == null)
-                {
-                    return NotFound();
-                }
-
-                var serializedTodo = JsonConvert.SerializeObject(todoItem);
-                await _cache.SetAsync(GetTodoItemCacheKey(id), Encoding.UTF8.GetBytes(serializedTodo));
-                return View(todoItem);
+                todoItem = await _context.Todo.FirstOrDefaultAsync(m => m.ID == id);
             }
+
+            if (todoItem == null)
+                return NotFound();
+
+            return View(todoItem);
         }
+
 
         // GET: Todos/Create
         public IActionResult Create()
@@ -105,131 +110,140 @@ namespace DotNetCoreSqlDb.Controllers
         }
 
         // POST: Todos/Create
-        // The cache logic is added with the help of GitHub Copilot
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ID,Description,CreatedDate")] Todo todo)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+                return View(todo);
+
+            _context.Add(todo);
+            await _context.SaveChangesAsync();
+
+            try
             {
-                _context.Add(todo);
-                await _context.SaveChangesAsync();
-
-                // Clear the todo items cache
                 await _cache.RemoveAsync(_TodoItemsCacheKey);
-
-                return RedirectToAction(nameof(Index));
             }
-            return View(todo);
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Failed to clear Redis cache");
+            }
+
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Todos/Edit/5
-        // The cache logic is added with the help of GitHub Copilot
+
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
+
+            Todo? todoItem = null;
+
+            try
+            {
+                var cached = await _cache.GetAsync(GetTodoItemCacheKey(id));
+                if (cached != null)
+                {
+                    _logger.LogInformation("Data from cache.");
+                    todoItem = JsonConvert.DeserializeObject<Todo>(
+                        Encoding.UTF8.GetString(cached));
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Redis unavailable, falling back to DB");
             }
 
-            var todo = await _cache.GetAsync(GetTodoItemCacheKey(id));
-            if (todo != null)
-            {
-                _logger.LogInformation("Data from cache.");
-                var todoItem = JsonConvert.DeserializeObject<Todo>(Encoding.UTF8.GetString(todo));
-                return View(todoItem);
-            }
-            else
+            if (todoItem == null)
             {
                 _logger.LogInformation("Data from database.");
-                var todoItem = await _context.Todo.FindAsync(id);
-                if (todoItem == null)
-                {
-                    return NotFound();
-                }
-
-                var serializedTodo = JsonConvert.SerializeObject(todoItem);
-                await _cache.SetAsync(GetTodoItemCacheKey(id), Encoding.UTF8.GetBytes(serializedTodo));
-                return View(todoItem);
+                todoItem = await _context.Todo.FindAsync(id);
             }
+
+            if (todoItem == null)
+                return NotFound();
+
+            return View(todoItem);
         }
 
+
         // POST: Todos/Edit/5
-        // The cache logic is added with the help of GitHub Copilot
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ID,Description,CreatedDate")] Todo todo)
         {
             if (id != todo.ID)
-            {
                 return NotFound();
-            }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+                return View(todo);
+
+            try
             {
+                _context.Update(todo);
+                await _context.SaveChangesAsync();
+
                 try
                 {
-                    _context.Update(todo);
-                    await _context.SaveChangesAsync();
-
-                    // Clear the todo item and todos list from the cache
                     await _cache.RemoveAsync(GetTodoItemCacheKey(id));
                     await _cache.RemoveAsync(_TodoItemsCacheKey);
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (Exception ex)
                 {
-                    if (!TodoExists(todo.ID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    _logger.LogWarning(ex, "Failed to clear Redis cache");
                 }
-                return RedirectToAction(nameof(Index));
             }
-            return View(todo);
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!TodoExists(todo.ID))
+                    return NotFound();
+                throw;
+            }
+
+            return RedirectToAction(nameof(Index));
         }
 
+
         // GET: Todos/Delete/5
-        // The cache logic is added with the help of GitHub Copilot
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
+
+            Todo? todoItem = null;
+
+            try
+            {
+                var cached = await _cache.GetAsync(GetTodoItemCacheKey(id));
+                if (cached != null)
+                {
+                    _logger.LogInformation("Data from cache.");
+                    todoItem = JsonConvert.DeserializeObject<Todo>(
+                        Encoding.UTF8.GetString(cached));
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Redis unavailable, falling back to DB");
             }
 
-            var todo = await _cache.GetAsync(GetTodoItemCacheKey(id));
-            if (todo != null)
-            {
-                _logger.LogInformation("Data from cache.");
-                var todoItem = JsonConvert.DeserializeObject<Todo>(Encoding.UTF8.GetString(todo));
-                return View(todoItem);
-            }
-            else
+            if (todoItem == null)
             {
                 _logger.LogInformation("Data from database.");
-                var todoItem = await _context.Todo
-                    .FirstOrDefaultAsync(m => m.ID == id);
-                if (todoItem == null)
-                {
-                    return NotFound();
-                }
-
-                var serializedTodo = JsonConvert.SerializeObject(todoItem);
-                await _cache.SetAsync(GetTodoItemCacheKey(id), Encoding.UTF8.GetBytes(serializedTodo));
-                return View(todoItem);
+                todoItem = await _context.Todo.FirstOrDefaultAsync(m => m.ID == id);
             }
+
+            if (todoItem == null)
+                return NotFound();
+
+            return View(todoItem);
         }
 
+
         // POST: Todos/Delete/5
-        // The cache logic is added with the help of GitHub Copilot
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -238,16 +252,22 @@ namespace DotNetCoreSqlDb.Controllers
             if (todo != null)
             {
                 _context.Todo.Remove(todo);
+                await _context.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
-
-            // Clear the todo item and todos list from the cache
-            await _cache.RemoveAsync(GetTodoItemCacheKey(id));
-            await _cache.RemoveAsync(_TodoItemsCacheKey);
+            try
+            {
+                await _cache.RemoveAsync(GetTodoItemCacheKey(id));
+                await _cache.RemoveAsync(_TodoItemsCacheKey);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Failed to clear Redis cache");
+            }
 
             return RedirectToAction(nameof(Index));
         }
+
 
         private bool TodoExists(int id)
         {
@@ -258,5 +278,5 @@ namespace DotNetCoreSqlDb.Controllers
         {
             return $"{_TodoItemsCacheKey}_{id}";
         }
-     }
+    }
 }
