@@ -29,10 +29,17 @@ else
     if (!string.IsNullOrWhiteSpace(redisConnectionString))
     {
         builder.Services.AddStackExchangeRedisCache(options =>
-        {
-            options.Configuration = redisConnectionString;
-            options.InstanceName = "SampleInstance";
-        });
+ {
+     options.ConfigurationOptions =
+         StackExchange.Redis.ConfigurationOptions.Parse(redisConnectionString);
+
+     options.ConfigurationOptions.ConnectTimeout = 200;
+     options.ConfigurationOptions.SyncTimeout = 200;
+     options.ConfigurationOptions.AbortOnConnectFail = false;
+
+     options.InstanceName = "SampleInstance";
+ });
+
     }
     else
     {
