@@ -21,26 +21,25 @@ else
     builder.Services.AddDbContext<MyDatabaseContext>(options =>
         options.UseSqlServer(sqlConnectionString));
 
-    // ---------- REDIS (VALFRI / SÄKER) ----------
+    // ---------- REDIS (VALFRI) ----------
     var redisConnectionString =
         builder.Configuration.GetConnectionString("AZURE_REDIS_CONNECTIONSTRING")
         ?? builder.Configuration["AZURE_REDIS_CONNECTIONSTRING"];
 
     if (!string.IsNullOrWhiteSpace(redisConnectionString))
-  if (!string.IsNullOrWhiteSpace(redisConnectionString))
-{
-    builder.Services.AddStackExchangeRedisCache(options =>
     {
-        options.Configuration = redisConnectionString;
-        options.InstanceName = "SampleInstance";
-    });
-}
-else
-{
-    builder.Services.AddDistributedMemoryCache();
+        builder.Services.AddStackExchangeRedisCache(options =>
+        {
+            options.Configuration = redisConnectionString;
+            options.InstanceName = "SampleInstance";
+        });
+    }
+    else
+    {
+        builder.Services.AddDistributedMemoryCache();
+    }
 }
 
-}
 
 // MVC
 builder.Services.AddControllersWithViews();
