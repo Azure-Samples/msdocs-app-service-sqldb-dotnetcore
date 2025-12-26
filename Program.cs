@@ -31,13 +31,22 @@ else
         builder.Services.AddStackExchangeRedisCache(options =>
  {
 
-     var config = StackExchange.Redis.ConfigurationOptions.Parse(redisConnectionString);
+     var config = new StackExchange.Redis.ConfigurationOptions
+     {
+         AbortOnConnectFail = false,
+         Ssl = true,
+         ConnectTimeout = 5000,
+         SyncTimeout = 5000
+     };
 
-     config.User = "default";
+     config.EndPoints.Add(
+         "<redis-name>.redis.cache.windows.net",
+         6380
+     );
+
+     config.ResolveDns = true;
 
      options.ConfigurationOptions = config;
-
-     options.InstanceName = "SampleInstance";
  });
 
     }
