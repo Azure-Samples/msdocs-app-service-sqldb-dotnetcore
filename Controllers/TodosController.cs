@@ -18,14 +18,24 @@ namespace DotNetCoreSqlDb.Controllers
         private const string TodoListCacheKey = "TodoItemsList";
 
         public TodosController(
-            MyDatabaseContext context,
-            IDistributedCache cache,
-            ILogger<TodosController> logger)
+     MyDatabaseContext context,
+     IDistributedCache cache,
+     ILogger<TodosController> logger,
+     IConfiguration config)
         {
             _context = context;
             _cache = cache;
             _logger = logger;
+
+            var redisConn = config["AZURE_REDIS_CONNECTIONSTRING"];
+
+            _logger.LogWarning(
+                "REDIS CONFIG LOADED | exists={exists} | length={length}",
+                !string.IsNullOrEmpty(redisConn),
+                redisConn?.Length
+            );
         }
+
 
         // =========================
         // GET: Todos
