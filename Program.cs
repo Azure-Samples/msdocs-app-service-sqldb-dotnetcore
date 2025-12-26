@@ -30,9 +30,12 @@ else
     {
         builder.Services.AddStackExchangeRedisCache(options =>
  {
-     options.ConfigurationOptions =
-         StackExchange.Redis.ConfigurationOptions.Parse(redisConnectionString);
 
+     var config = StackExchange.Redis.ConfigurationOptions.Parse(redisConnectionString);
+
+     config.User = "default";
+
+     options.ConfigurationOptions = config;
 
      options.InstanceName = "SampleInstance";
  });
