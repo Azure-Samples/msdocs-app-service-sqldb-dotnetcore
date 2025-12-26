@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using DotNetCoreSqlDb.Data;
 using StackExchange.Redis;
+using System.Security.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,26 +30,14 @@ else
     if (!string.IsNullOrWhiteSpace(redisConnectionString))
     {
         builder.Services.AddStackExchangeRedisCache(options =>
- {
+        {
+            var config = StackExchange.Redis.ConfigurationOptions.Parse(redisConnectionString);
 
-     var config = new StackExchange.Redis.ConfigurationOptions
-     {
-         AbortOnConnectFail = false,
-         Ssl = true,
-         ConnectTimeout = 5000,
-         SyncTimeout = 5000
-     };
+            config.User = "default";
 
-     config.EndPoints.Add(
-         "<redis-name>.redis.cache.windows.net",
-         6380
-     );
-
-     config.ResolveDns = true;
-
-     options.ConfigurationOptions = config;
- });
-
+            options.ConfigurationOptions = config;
+            options.InstanceName = "SampleInstance";
+        });
     }
     else
     {
@@ -56,12 +45,56 @@ else
     }
 }
 
-
 // MVC
 builder.Services.AddControllersWithViews();
 builder.Logging.AddAzureWebAppDiagnostics();
 
 var app = builder.Build();
+
+
+// =====================================================
+// 🔴 REDIS RAW CONNECT TEST – ENDA TILLÄGGET
+// =====================================================
+app.Lifetime.ApplicationStarted.Register(async () =>
+{
+    var logger = app.Services
+        .GetRequiredService<ILoggerFactory>()
+        .CreateLogger("REDIS-RAW-TEST");
+
+    try
+    {
+        var cs = Environment.GetEnvironmentVariable("AZURE_REDIS_CONNECTIONSTRING");
+
+        logger.LogWarning(
+            "REDIS RAW TEST | exists={exists} | length={len}",
+            !string.IsNullOrWhiteSpace(cs),
+            cs?.Length ?? 0
+        );
+
+        var options = ConfigurationOptions.Parse(cs);
+        options.AbortOnConnectFail = false;
+        options.ConnectTimeout = 15000;
+        options.SyncTimeout = 15000;
+        options.Ssl = true;
+        options.SslProtocols = SslProtocols.Tls12;
+
+        using var mux = await ConnectionMultiplexer.ConnectAsync(options);
+        var db = mux.GetDatabase();
+
+        await db.StringSetAsync("redis-raw-test", "ok");
+        var value = await db.StringGetAsync("redis-raw-test");
+
+        logger.LogWarning("REDIS RAW TEST SUCCESS | value={value}", value);
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "REDIS RAW TEST FAILED");
+    }
+});
+// =====================================================
+// 🔴 SLUT PÅ TILLÄGG
+// =====================================================
+
 
 if (!app.Environment.IsDevelopment())
 {
