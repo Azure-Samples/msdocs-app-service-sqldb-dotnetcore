@@ -68,9 +68,15 @@ namespace DotNetCoreSqlDb.Controllers
 
                 try
                 {
+                    var cacheOptions = new DistributedCacheEntryOptions
+                    {
+                        AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(60)
+                    };
+
                     await _cache.SetAsync(
                         TodoListCacheKey,
-                        Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(todos))
+                        Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(todos)),
+                        cacheOptions 
                     );
                 }
                 catch (Exception ex)
