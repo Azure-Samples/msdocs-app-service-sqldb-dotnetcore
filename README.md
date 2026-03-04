@@ -86,3 +86,9 @@ To simplify the scenario, the AZD template generates a new database password eac
 ## Getting help
 
 If you're working with this project and running into issues, please post in [Issues](/issues).
+
+latest Update :
+ local link to sql database
+   dotnet run work.
+
+azd up   will  publish to Azure
