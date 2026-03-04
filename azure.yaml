@@ -18,11 +18,21 @@ hooks:
       run: dotnet ef migrations bundle --target-runtime linux-x64 --force -o migrationsbundle
       interactive: true
       continueOnError: true
+    windows:
+      shell: pwsh
+      run: dotnet ef migrations bundle --target-runtime linux-x64 --force -o migrationsbundle
+      interactive: true
+      continueOnError: true  
   # The postpackage hook is used to remove the migrationsbundle file after deploy package is created.
   postpackage:
     posix:
       shell: sh
       run: rm migrationsbundle
+      interactive: true
+      continueOnError: true
+    windows:
+      shell: pwsh
+      run: Remove-Item migrationsbundle -ErrorAction SilentlyContinue
       interactive: true
       continueOnError: true
   # The postprovision hook is used to display the connection strings and app settings for the App Service app.
