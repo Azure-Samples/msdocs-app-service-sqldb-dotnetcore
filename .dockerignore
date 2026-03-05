@@ -1,0 +1,10 @@
+**/.git
+**/.gitignore
+**/.azure
+**/.vscode
+**/.vs
+**/bin
+**/obj
+**/node_modules
+README.md
+project_purpose_overview.md

@@ -1,0 +1,44 @@
+services:
+  sql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: first-app-sql
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Your_password123!"
+    ports:
+      - "1433:1433"
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P $$SA_PASSWORD -Q 'SELECT 1' -C || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    container_name: first-app-redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: first-app-web
+    depends_on:
+      sql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Production"
+      ASPNETCORE_URLS: "http://+:8080"
+      ConnectionStrings__AZURE_SQL_CONNECTIONSTRING: "Server=sql,1433;Database=ApplicationDB;User Id=sa;Password=Your_password123!;TrustServerCertificate=True;MultipleActiveResultSets=true"
+      AZURE_SQL_CONNECTIONSTRING: "Server=sql,1433;Database=ApplicationDB;User Id=sa;Password=Your_password123!;TrustServerCertificate=True;MultipleActiveResultSets=true"
+      AZURE_REDIS_CONNECTIONSTRING: "redis:6379,abortConnect=false"
+    ports:
+      - "8080:8080"

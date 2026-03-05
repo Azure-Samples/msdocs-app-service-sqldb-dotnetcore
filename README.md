@@ -37,6 +37,22 @@ This project has a [dev container configuration](.devcontainer/), which makes it
 
 1. When you see the message `Your application running on port 5093 is available.`, click **Open in Browser**.
 
+## Run with Docker (local SQL + Redis)
+
+From the repository root:
+
+```shell
+docker compose up --build
+```
+
+Then open:
+
+```text
+http://localhost:8080
+```
+
+The `web` container runs EF migrations at startup, then launches the app. SQL Server and Redis are started by `docker-compose.yml`.
+
 ## Quick deploy
 
 This project is designed to work well with the [Azure Developer CLI](https://learn.microsoft.com/azure/developer/azure-developer-cli/overview), which makes it easier to develop apps locally, deploy them to Azure, and monitor them.
@@ -92,3 +108,5 @@ latest Update :
    dotnet run work.
 
 azd up   will  publish to Azure
+
+possible problem is , when you deleted a old resource group and publish again, the valt maybe still in deleted mode, cannot create again, need purge or restore.
