@@ -11,6 +11,7 @@ services:
     host: containerapp
     docker:
       path: ./Dockerfile
+      registry: ${AZURE_CONTAINER_REGISTRY_ENDPOINT}
 hooks:
   postprovision:
     posix:
@@ -20,6 +21,6 @@ hooks:
       continueOnError: true
     windows:
       shell: pwsh
-      run: Write-Host "`n`nContainer App has the following generated settings:`n"; $CONNECTION_SETTINGS | ConvertFrom-Json | ForEach-Object { Write-Host "`t- $_" }
+      run: Write-Host "`n`nContainer App has the following generated settings:`n"; if ($env:CONNECTION_SETTINGS) { $env:CONNECTION_SETTINGS | ConvertFrom-Json | ForEach-Object { Write-Host "`t- $_" } } else { Write-Host "`t- (none)" }
       interactive: true
       continueOnError: true

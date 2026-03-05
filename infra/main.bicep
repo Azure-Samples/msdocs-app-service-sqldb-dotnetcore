@@ -41,3 +41,4 @@ output CONNECTION_SETTINGS array = resources.outputs.CONNECTION_SETTINGS
 output CONTAINER_APP_NAME string = resources.outputs.CONTAINER_APP_NAME
 output CONTAINER_APP_ID string = resources.outputs.CONTAINER_APP_ID
 output CONTAINER_REGISTRY_ENDPOINT string = resources.outputs.CONTAINER_REGISTRY_ENDPOINT
+output AZURE_CONTAINER_REGISTRY_ENDPOINT string = resources.outputs.AZURE_CONTAINER_REGISTRY_ENDPOINT

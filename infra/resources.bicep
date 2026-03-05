@@ -6,6 +6,7 @@ param principalId string
 param databasePassword string
 
 var appName = '${name}-${resourceToken}'
+var containerAppName = toLower(appName)
 var containerRegistryName = toLower('acr${resourceToken}001')
 var sqlConnectionString = 'Server=tcp:${dbserver.name}.database.windows.net,1433;Initial Catalog=${dbserver::db.name};Persist Security Info=False;User ID=${dbserver.properties.administratorLogin};Password=${databasePassword};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;'
 
@@ -39,6 +40,20 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2024-01-01' = {
         }
       }
       {
+        name: 'aca-infra-subnet'
+        properties: {
+          addressPrefix: '10.0.4.0/23'
+          delegations: [
+            {
+              name: 'dlg-containerapps-infra'
+              properties: {
+                serviceName: 'Microsoft.App/environments'
+              }
+            }
+          ]
+        }
+      }
+      {
         name: 'database-subnet'
         properties: {
           addressPrefix: '10.0.2.0/24'
@@ -61,7 +76,7 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2024-01-01' = {
     name: 'vault-subnet'
   }
   resource subnetForAca 'subnets' existing = {
-    name: 'aca-subnet'
+    name: 'aca-infra-subnet'
   }
   resource subnetForCache 'subnets' existing = {
     name: 'cache-subnet'
@@ -311,6 +326,12 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2024-03-01'
   name: '${appName}-cae'
   location: location
   properties: {
+    workloadProfiles: [
+      {
+        name: 'Consumption'
+        workloadProfileType: 'Consumption'
+      }
+    ]
     appLogsConfiguration: {
       destination: 'log-analytics'
       logAnalyticsConfiguration: {
@@ -326,7 +347,7 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2024-03-01'
 }
 
 resource web 'Microsoft.App/containerApps@2024-03-01' = {
-  name: appName
+  name: containerAppName
   location: location
   tags: {
     'azd-service-name': 'web'
@@ -339,17 +360,22 @@ resource web 'Microsoft.App/containerApps@2024-03-01' = {
     configuration: {
       ingress: {
         external: true
-        targetPort: 8080
+        targetPort: 80
         allowInsecure: false
         transport: 'auto'
       }
       registries: [
         {
           server: containerRegistry.properties.loginServer
-          identity: 'system'
+          username: listCredentials(containerRegistry.id, containerRegistry.apiVersion).username
+          passwordSecretRef: 'acr-password'
         }
       ]
       secrets: [
+        {
+          name: 'acr-password'
+          value: listCredentials(containerRegistry.id, containerRegistry.apiVersion).passwords[0].value
+        }
         {
           name: 'sql-connection-string'
           value: sqlConnectionString
@@ -369,6 +395,10 @@ resource web 'Microsoft.App/containerApps@2024-03-01' = {
             {
               name: 'ASPNETCORE_ENVIRONMENT'
               value: 'Production'
+            }
+            {
+              name: 'ASPNETCORE_URLS'
+              value: 'http://+:80'
             }
             {
               name: 'AZURE_SQL_CONNECTIONSTRING'
@@ -421,3 +451,4 @@ output CONNECTION_SETTINGS array = [
 output CONTAINER_APP_NAME string = web.name
 output CONTAINER_APP_ID string = web.id
 output CONTAINER_REGISTRY_ENDPOINT string = containerRegistry.properties.loginServer
+output AZURE_CONTAINER_REGISTRY_ENDPOINT string = containerRegistry.properties.loginServer
