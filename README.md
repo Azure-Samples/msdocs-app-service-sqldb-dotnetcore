@@ -207,6 +207,44 @@ Fix:
 - Guard the hook:
   - If value exists, parse JSON.
   - Else print `(none)` and continue.
+
+### 9) Still seeing the default "Your Azure Container Apps app is live" page
+
+Symptom:
+- ACA endpoint returns the default welcome page instead of the Todo app.
+
+Root cause:
+- `azd provision` applies infra template state. If the template uses a bootstrap image for initial provisioning, the Container App image can be reset to that default image.
+
+Fix:
+- Run deploy after provision to publish your app image revision:
+
+```shell
+azd provision -e VSCodeFirstDemoAca --no-prompt
+azd deploy -e VSCodeFirstDemoAca --no-prompt
+```
+
+- Verify active revision image:
+
+```shell
+az containerapp revision list -g VSCodeFirstDemoAca_group -n vscodefirstdemoaca-koqndqit3fkna -o table
+```
+
+### 10) App starts, migrations succeed, but requests still fail with connection string errors
+
+Symptom:
+- Runtime error page with `The ConnectionString property has not been initialized.`
+- Migrations may still succeed in startup.
+
+Root cause:
+- The app uses `builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING")`, which maps to configuration key:
+  - `ConnectionStrings__AZURE_SQL_CONNECTIONSTRING`
+- Only `AZURE_SQL_CONNECTIONSTRING` was set in container env, so EF runtime query path had empty connection string.
+
+Fix:
+- Set both env vars in ACA template to the same secret:
+  - `AZURE_SQL_CONNECTIONSTRING`
+  - `ConnectionStrings__AZURE_SQL_CONNECTIONSTRING`
  
 ## Quick deploy
 

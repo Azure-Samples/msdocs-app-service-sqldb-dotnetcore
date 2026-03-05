@@ -405,6 +405,10 @@ resource web 'Microsoft.App/containerApps@2024-03-01' = {
               secretRef: 'sql-connection-string'
             }
             {
+              name: 'ConnectionStrings__AZURE_SQL_CONNECTIONSTRING'
+              secretRef: 'sql-connection-string'
+            }
+            {
               name: 'AZURE_REDIS_CONNECTIONSTRING'
               secretRef: 'redis-connection-string'
             }
