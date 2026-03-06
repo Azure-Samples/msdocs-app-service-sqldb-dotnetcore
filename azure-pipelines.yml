@@ -1,0 +1,102 @@
+trigger:
+  branches:
+    include:
+      - main
+
+pr:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  AZURE_LOCATION: canadacentral
+  AZURE_SUBSCRIPTION_ID: b4686626-5082-4d6b-b0aa-0ee897b1b029
+  DEV_ENV_NAME: VSCodeFirstDemoAca-dev
+  PROD_ENV_NAME: VSCodeFirstDemoAca-prod
+
+stages:
+- stage: PR_Validate
+  displayName: PR Validate
+  condition: eq(variables['Build.Reason'], 'PullRequest')
+  jobs:
+  - job: validate
+    steps:
+    - checkout: self
+
+    - task: UseDotNet@2
+      inputs:
+        packageType: sdk
+        version: '8.0.x'
+
+    - script: |
+        dotnet restore
+        dotnet build -c Release --no-restore
+      displayName: Dotnet Build
+
+    - task: AzureCLI@2
+      displayName: Bicep Validate
+      inputs:
+        azureSubscription: 'sc-aca-dev'
+        scriptType: bash
+        scriptLocation: inlineScript
+        inlineScript: |
+          az bicep build --file infra/main.bicep
+          az bicep build --file infra/resources.bicep
+
+- stage: Deploy_Dev
+  displayName: Deploy Dev
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+  jobs:
+  - deployment: deploy_dev
+    environment: aca-dev
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - checkout: self
+
+          - task: AzureCLI@2
+            displayName: Provision+Deploy Dev by AZD
+            inputs:
+              azureSubscription: 'sc-aca-dev'
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |
+                curl -fsSL https://aka.ms/install-azd.sh | bash
+                export PATH="$PATH:$HOME/.azd/bin"
+                azd version
+
+                azd env new $(DEV_ENV_NAME) --location $(AZURE_LOCATION) --subscription $(AZURE_SUBSCRIPTION_ID) || true
+                azd provision -e $(DEV_ENV_NAME) --no-prompt
+                azd deploy -e $(DEV_ENV_NAME) --no-prompt
+
+- stage: Deploy_Prod
+  displayName: Deploy Prod
+  dependsOn: Deploy_Dev
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+  jobs:
+  - deployment: deploy_prod
+    environment: aca-prod
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - checkout: self
+
+          - task: AzureCLI@2
+            displayName: Provision+Deploy Prod by AZD
+            inputs:
+              azureSubscription: 'sc-aca-prod'
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |
+                curl -fsSL https://aka.ms/install-azd.sh | bash
+                export PATH="$PATH:$HOME/.azd/bin"
+                azd version
+
+                azd env new $(PROD_ENV_NAME) --location $(AZURE_LOCATION) --subscription $(AZURE_SUBSCRIPTION_ID) || true
+                azd provision -e $(PROD_ENV_NAME) --no-prompt
+                azd deploy -e $(PROD_ENV_NAME) --no-prompt
