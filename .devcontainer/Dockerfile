@@ -1,5 +1,11 @@
 FROM mcr.microsoft.com/devcontainers/dotnet:1-8.0-bookworm
 
+# Drop the stale Yarn apt source baked into the base image; its signing
+# key (62D54FD4003F6525) is no longer accepted by Yarn, causing
+# `apt-get update` to fail during devcontainer feature installs.
+# The tutorial doesn't use Yarn.
+RUN rm -f /etc/apt/sources.list.d/yarn.list
+
 # Install SQL Tools: SQLPackage and sqlcmd
 COPY mssql/installSQLtools.sh installSQLtools.sh
 RUN bash ./installSQLtools.sh \
