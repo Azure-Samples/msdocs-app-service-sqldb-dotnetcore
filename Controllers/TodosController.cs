@@ -2,50 +2,25 @@
 using Microsoft.EntityFrameworkCore;
 using DotNetCoreSqlDb.Data;
 using DotNetCoreSqlDb.Models;
-using Microsoft.Extensions.Caching.Distributed;
-using Newtonsoft.Json;
-using System.Text;
 
 namespace DotNetCoreSqlDb.Controllers
 {
-    [ActionTimerFilter]
     public class TodosController : Controller
     {
-        private readonly ILogger<TodosController> _logger;
         private readonly MyDatabaseContext _context;
-        private readonly IDistributedCache _cache;
-        private readonly string _TodoItemsCacheKey = "TodoItemsList";
 
-        public TodosController(MyDatabaseContext context, IDistributedCache cache, ILogger<TodosController> logger)
+        public TodosController(MyDatabaseContext context)
         {
             _context = context;
-            _cache = cache;
-            _logger = logger;
         }
 
         // GET: Todos
-        // The cache logic is added with the help of GitHub Copilot
         public async Task<IActionResult> Index()
         {
-            var todoItems = await _cache.GetAsync(_TodoItemsCacheKey);
-            if (todoItems != null)
-            {
-                _logger.LogInformation("Data from cache.");
-                var todoList = JsonConvert.DeserializeObject<List<Todo>>(Encoding.UTF8.GetString(todoItems));
-                return View(todoList);
-            }
-            else
-            {
-                _logger.LogInformation("Data from database.");
-                var todoList = await _context.Todo.ToListAsync();
-                var serializedTodoList = JsonConvert.SerializeObject(todoList);
-                await _cache.SetAsync(_TodoItemsCacheKey, Encoding.UTF8.GetBytes(serializedTodoList));
-                return View(todoList);
-            }
+            return View(await _context.Todo.ToListAsync());
         }
 
         // GET: Todos/Details/5
-        // The cache logic is added with the help of GitHub Copilot
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -53,27 +28,14 @@ namespace DotNetCoreSqlDb.Controllers
                 return NotFound();
             }
 
-            var todo = await _cache.GetAsync(GetTodoItemCacheKey(id));
-            if (todo != null)
+            var todo = await _context.Todo
+                .FirstOrDefaultAsync(m => m.ID == id);
+            if (todo == null)
             {
-                _logger.LogInformation("Data from cache.");
-                var todoItem = JsonConvert.DeserializeObject<Todo>(Encoding.UTF8.GetString(todo));
-                return View(todoItem);
+                return NotFound();
             }
-            else
-            {
-                _logger.LogInformation("Data from database.");
-                var todoItem = await _context.Todo
-                    .FirstOrDefaultAsync(m => m.ID == id);
-                if (todoItem == null)
-                {
-                    return NotFound();
-                }
 
-                var serializedTodo = JsonConvert.SerializeObject(todoItem);
-                await _cache.SetAsync(GetTodoItemCacheKey(id), Encoding.UTF8.GetBytes(serializedTodo));
-                return View(todoItem);
-            }
+            return View(todo);
         }
 
         // GET: Todos/Create
@@ -83,7 +45,6 @@ namespace DotNetCoreSqlDb.Controllers
         }
 
         // POST: Todos/Create
-        // The cache logic is added with the help of GitHub Copilot
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -94,17 +55,12 @@ namespace DotNetCoreSqlDb.Controllers
             {
                 _context.Add(todo);
                 await _context.SaveChangesAsync();
-
-                // Clear the todo items cache
-                await _cache.RemoveAsync(_TodoItemsCacheKey);
-
                 return RedirectToAction(nameof(Index));
             }
             return View(todo);
         }
 
         // GET: Todos/Edit/5
-        // The cache logic is added with the help of GitHub Copilot
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -112,30 +68,15 @@ namespace DotNetCoreSqlDb.Controllers
                 return NotFound();
             }
 
-            var todo = await _cache.GetAsync(GetTodoItemCacheKey(id));
-            if (todo != null)
+            var todo = await _context.Todo.FindAsync(id);
+            if (todo == null)
             {
-                _logger.LogInformation("Data from cache.");
-                var todoItem = JsonConvert.DeserializeObject<Todo>(Encoding.UTF8.GetString(todo));
-                return View(todoItem);
+                return NotFound();
             }
-            else
-            {
-                _logger.LogInformation("Data from database.");
-                var todoItem = await _context.Todo.FindAsync(id);
-                if (todoItem == null)
-                {
-                    return NotFound();
-                }
-
-                var serializedTodo = JsonConvert.SerializeObject(todoItem);
-                await _cache.SetAsync(GetTodoItemCacheKey(id), Encoding.UTF8.GetBytes(serializedTodo));
-                return View(todoItem);
-            }
+            return View(todo);
         }
 
         // POST: Todos/Edit/5
-        // The cache logic is added with the help of GitHub Copilot
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -153,10 +94,6 @@ namespace DotNetCoreSqlDb.Controllers
                 {
                     _context.Update(todo);
                     await _context.SaveChangesAsync();
-
-                    // Clear the todo item and todos list from the cache
-                    await _cache.RemoveAsync(GetTodoItemCacheKey(id));
-                    await _cache.RemoveAsync(_TodoItemsCacheKey);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -175,7 +112,6 @@ namespace DotNetCoreSqlDb.Controllers
         }
 
         // GET: Todos/Delete/5
-        // The cache logic is added with the help of GitHub Copilot
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -183,31 +119,17 @@ namespace DotNetCoreSqlDb.Controllers
                 return NotFound();
             }
 
-            var todo = await _cache.GetAsync(GetTodoItemCacheKey(id));
-            if (todo != null)
+            var todo = await _context.Todo
+                .FirstOrDefaultAsync(m => m.ID == id);
+            if (todo == null)
             {
-                _logger.LogInformation("Data from cache.");
-                var todoItem = JsonConvert.DeserializeObject<Todo>(Encoding.UTF8.GetString(todo));
-                return View(todoItem);
+                return NotFound();
             }
-            else
-            {
-                _logger.LogInformation("Data from database.");
-                var todoItem = await _context.Todo
-                    .FirstOrDefaultAsync(m => m.ID == id);
-                if (todoItem == null)
-                {
-                    return NotFound();
-                }
 
-                var serializedTodo = JsonConvert.SerializeObject(todoItem);
-                await _cache.SetAsync(GetTodoItemCacheKey(id), Encoding.UTF8.GetBytes(serializedTodo));
-                return View(todoItem);
-            }
+            return View(todo);
         }
 
         // POST: Todos/Delete/5
-        // The cache logic is added with the help of GitHub Copilot
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -219,22 +141,12 @@ namespace DotNetCoreSqlDb.Controllers
             }
 
             await _context.SaveChangesAsync();
-
-            // Clear the todo item and todos list from the cache
-            await _cache.RemoveAsync(GetTodoItemCacheKey(id));
-            await _cache.RemoveAsync(_TodoItemsCacheKey);
-
             return RedirectToAction(nameof(Index));
         }
 
         private bool TodoExists(int id)
         {
             return _context.Todo.Any(e => e.ID == id);
-        }
-
-        private string GetTodoItemCacheKey(int? id)
-        {
-            return $"{_TodoItemsCacheKey}_{id}";
         }
      }
 }
