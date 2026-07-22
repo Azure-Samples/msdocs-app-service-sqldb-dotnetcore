@@ -63,4 +63,4 @@ then
     done
 fi
 
-dotnet tool install --global dotnet-ef --version 8.*
+dotnet tool install --global dotnet-ef --version 10.*
