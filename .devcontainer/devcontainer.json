@@ -12,6 +12,15 @@
 		"ghcr.io/devcontainers/features/azure-cli:1": {}
 	},
 
+	// Reduce peak build memory so `dotnet publish` (e.g. during `azd up`) isn't
+	// OOM-killed on smaller Codespace machines: use workstation GC and avoid
+	// leaving persistent MSBuild/Roslyn build-server processes resident.
+	"remoteEnv": {
+		"DOTNET_gcServer": "0",
+		"MSBUILDDISABLENODEREUSE": "1",
+		"DOTNET_CLI_USE_MSBUILD_SERVER": "0"
+	},
+
 	"customizations": {
 		"vscode": {
 			// "settings": { 

@@ -163,7 +163,7 @@ resource privateDnsZoneDB 'Microsoft.Network/privateDnsZones@2020-06-01' = {
   }
 }
 
-// Resources needed to secure Redis Cache behind a private endpoint
+// Resources needed to secure Azure Managed Redis behind a private endpoint
 resource cachePrivateEndpoint 'Microsoft.Network/privateEndpoints@2023-04-01' = {
   name: '${appName}-cache-privateEndpoint'
   location: location
@@ -176,7 +176,7 @@ resource cachePrivateEndpoint 'Microsoft.Network/privateEndpoints@2023-04-01' = 
         name: '${appName}-cache-privateEndpoint'
         properties: {
           privateLinkServiceId: redisCache.id
-          groupIds: ['redisCache']
+          groupIds: ['redisEnterprise']
         }
       }
     ]
@@ -196,7 +196,7 @@ resource cachePrivateEndpoint 'Microsoft.Network/privateEndpoints@2023-04-01' = 
   }
 }
 resource privateDnsZoneCache 'Microsoft.Network/privateDnsZones@2020-06-01' = {
-  name: 'privatelink.redis.cache.windows.net'
+  name: 'privatelink.redis.azure.net'
   location: 'global'
   dependsOn: [
     virtualNetwork
@@ -213,7 +213,7 @@ resource privateDnsZoneCache 'Microsoft.Network/privateDnsZones@2020-06-01' = {
   }  
 }
 
-// The Key Vault is used to manage SQL database and redis secrets.
+// The Key Vault is used to manage SQL database and Azure Managed Redis secrets.
 // Current user has the admin permissions to configure key vault secrets, but by default doesn't have the permissions to read them.
 resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' = {
   name: '${take(replace(appName, '-', ''), 17)}-vault'
@@ -269,20 +269,24 @@ resource dbserver 'Microsoft.Sql/servers@2023-05-01-preview' = {
   }  
 }
 
-// The Redis cache is configured to the minimum pricing tier
-resource redisCache 'Microsoft.Cache/Redis@2023-08-01' = {
+// Azure Managed Redis is configured to the minimum pricing tier
+resource redisCache 'Microsoft.Cache/redisEnterprise@2026-05-01-preview' = {
   name: '${appName}-cache'
   location: location
+  sku: {
+    name: 'Balanced_B0'
+  }
   properties: {
-    sku: {
-      name: 'Basic'
-      family: 'C'
-      capacity: 0
-    }
-    redisConfiguration: {}
-    enableNonSslPort: false
-    redisVersion: '6'
+    minimumTlsVersion: '1.2'
     publicNetworkAccess: 'Disabled'
+  }
+
+  // Azure Managed Redis authentication
+  resource redisDatabase 'databases@2026-05-01-preview' = {
+    name: 'default'
+    properties: {
+      accessKeysAuthentication: 'Enabled'
+    }
   }
 }
 
@@ -305,7 +309,7 @@ resource web 'Microsoft.Web/sites@2022-09-01' = {
   tags: {'azd-service-name': 'web'} // Needed by AZD
   properties: {
     siteConfig: {
-      linuxFxVersion: 'DOTNETCORE|8.0' // Set to .NET 8 (LTS)
+      linuxFxVersion: 'DOTNETCORE|10.0' // Set to .NET 10 (LTS)
       vnetRouteAllEnabled: true // Route outbound traffic to the VNET
       ftpsState: 'Disabled'
       appCommandLine: './migrationsbundle -- --environment Production && dotnet "DotNetCoreSqlDb.dll"'
@@ -423,7 +427,7 @@ resource cacheConnector 'Microsoft.ServiceLinker/linkers@2024-04-01' = {
     clientType: 'dotnet'
     targetService: {
       type: 'AzureResource'
-      id:  resourceId('Microsoft.Cache/Redis/Databases', redisCache.name, '0')
+      id: redisCache::redisDatabase.id
     }
     authInfo: {
       authType: 'accessKey' // Configure secrets as key vault references. No secret is exposed in App Service.
